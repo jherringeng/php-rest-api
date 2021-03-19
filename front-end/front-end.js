@@ -1,4 +1,6 @@
 var users;
+var keyAPI = 'wpf0okfhmjoyb3v0gw16';
+// var keyAPI = 'gsbsgnsnsfn';
 
 function displayInfo() {
   users.forEach(function(user){
@@ -19,6 +21,9 @@ function getUsers() {
     url: "http://localhost/php-rest-api/back-end/index.php",
     type: 'GET',
     dataType: 'json',
+    headers: {
+      "APIKEY": keyAPI
+    },
     data: {
 
     },
@@ -39,15 +44,20 @@ function getUsers() {
   });
 }
 
+// Event listener for get user
 $(document).on('click', '#get', function () {
   getUser();
 });
 
 function getUser() {
+  const id = $('#id').val();
   $.ajax({
-    url: "http://localhost/php-rest-api/back-end/index.php?id=2",
+    url: `http://localhost/php-rest-api/back-end/index.php?id=${id}`,
     type: 'GET',
     dataType: 'json',
+    headers: {
+      "APIKEY": keyAPI
+    },
     data: {
 
     },
@@ -81,6 +91,9 @@ function insertUser() {
     url: "http://localhost/php-rest-api/back-end/index.php",
     type: 'PUT',
     dataType: 'json',
+    headers: {
+      "APIKEY": keyAPI
+    },
     data: {
       firstName: firstName,
       surname: surname,
@@ -125,6 +138,9 @@ function updateUser() {
       email: email,
       phone: phone
     },
+    headers: {
+      "APIKEY": keyAPI
+    },
     success: function(result) {
 
       console.log(result)
@@ -155,6 +171,9 @@ function deleteUser(id) {
     dataType: 'json',
     data: {
 
+    },
+    headers: {
+      "APIKEY": keyAPI
     },
     success: function(result) {
 
