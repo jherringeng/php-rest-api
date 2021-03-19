@@ -16,6 +16,10 @@ function displayInfo() {
   });
 }
 
+function addToConsole(message) {
+  $( "#console" ).append( `<p>${message}</p>`);
+}
+
 function getUsers() {
   $.ajax({
     url: "http://localhost/php-rest-api/back-end/index.php",
@@ -35,6 +39,7 @@ function getUsers() {
         console.log(result['data']);
         users = result['data'];
         displayInfo()
+        addToConsole("Got all users")
       }
 
     },
@@ -67,7 +72,7 @@ function getUser() {
       if (result.status.name == "ok") {
         // console.log(result['data'])
         console.log(result['data']);
-        users = result['data'];
+        addToConsole(result['data']);
 
       }
 
@@ -106,7 +111,7 @@ function insertUser() {
       console.log(result)
       if (result.status.name == "ok") {
         console.log("Added user")
-
+        addToConsole("Added user");
       }
 
     },
@@ -145,8 +150,8 @@ function updateUser() {
 
       console.log(result)
       if (result.status.name == "ok") {
-        console.log("Updated user")
-
+        console.log("Updated user");
+        addToConsole("Updated user");
       }
 
     },
@@ -179,7 +184,7 @@ function deleteUser(id) {
 
       if (result.status.name == "ok") {
         console.log("Deleted user")
-
+        addToConsole("Deleted user");
       }
 
     },

@@ -6,6 +6,12 @@ class dbConn {
 	private $cd_password = ""; // password
 	private $cd_dbname = "users"; // database name
 
+  private $conn;
+
+  function __construct() {
+    $this->conn = new mysqli($this->cd_host, $this->cd_user, $this->cd_password, $this->cd_dbname);
+  }
+
   function getUsers() {
 
   	ini_set('display_errors', 'On');
@@ -13,11 +19,7 @@ class dbConn {
 
   	$executionStartTime = microtime(true);
 
-  	include("config.php");
-
   	header('Content-Type: application/json; charset=UTF-8');
-
-  	$conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname);
 
   	if (mysqli_connect_errno()) {
 
@@ -27,7 +29,7 @@ class dbConn {
   		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -36,7 +38,7 @@ class dbConn {
   	}
 
   	$query = "SELECT * FROM users";
-  	$result = $conn->query($query);
+  	$result = $this->conn->query($query);
 
   	if (!$result) {
 
@@ -45,7 +47,7 @@ class dbConn {
   		$output['status']['description'] = "query failed";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -67,7 +69,7 @@ class dbConn {
   	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   	$output['data'] = $data;
 
-  	mysqli_close($conn);
+  	mysqli_close($this->conn);
 
   	echo json_encode($output);
 
@@ -80,11 +82,7 @@ class dbConn {
 
   	$executionStartTime = microtime(true);
 
-  	include("config.php");
-
   	header('Content-Type: application/json; charset=UTF-8');
-
-  	$conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname);
 
   	if (mysqli_connect_errno()) {
 
@@ -94,7 +92,7 @@ class dbConn {
   		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -103,7 +101,7 @@ class dbConn {
   	}
 
   	$query = "SELECT * FROM users WHERE id='$id'";
-  	$result = $conn->query($query);
+  	$result = $this->conn->query($query);
 
   	if (!$result) {
 
@@ -112,7 +110,7 @@ class dbConn {
   		$output['status']['description'] = "query failed";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -134,7 +132,7 @@ class dbConn {
   	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   	$output['data'] = $data;
 
-  	mysqli_close($conn);
+  	mysqli_close($this->conn);
 
   	echo json_encode($output);
 
@@ -147,11 +145,7 @@ class dbConn {
 
   	$executionStartTime = microtime(true);
 
-  	include("config.php");
-
   	header('Content-Type: application/json; charset=UTF-8');
-
-  	$conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname);
 
   	if (mysqli_connect_errno()) {
 
@@ -161,7 +155,7 @@ class dbConn {
   		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -174,7 +168,7 @@ class dbConn {
   	$email = $put_vars['email']; $phone = $put_vars['phone'];
 
   	$query = "INSERT INTO users (first_name, surname, dob, email, phone ) VALUES ('$firstName', '$surname', '$dob', '$email', '$phone')";
-  	$result = $conn->query($query);
+  	$result = $this->conn->query($query);
 
   	if (!$result) {
 
@@ -183,7 +177,7 @@ class dbConn {
   		$output['status']['description'] = "query failed";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -205,7 +199,7 @@ class dbConn {
   	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   	$output['data'] = "Inserted user.";
 
-  	mysqli_close($conn);
+  	mysqli_close($this->conn);
 
   	echo json_encode($output);
 
@@ -218,11 +212,7 @@ class dbConn {
 
   	$executionStartTime = microtime(true);
 
-  	include("config.php");
-
   	header('Content-Type: application/json; charset=UTF-8');
-
-  	$conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname);
 
   	if (mysqli_connect_errno()) {
 
@@ -232,7 +222,7 @@ class dbConn {
   		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -245,7 +235,7 @@ class dbConn {
   	$dob = $post_vars['dob'];	$email = $post_vars['email']; $phone = $post_vars['phone'];
 
   	$query = "UPDATE users SET first_name='$firstName', surname='$surname', dob='$dob', email='$email', phone='$phone' WHERE id='$id'";
-  	$result = $conn->query($query);
+  	$result = $this->conn->query($query);
 
   	if (!$result) {
 
@@ -254,7 +244,7 @@ class dbConn {
   		$output['status']['description'] = "query failed";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -268,7 +258,7 @@ class dbConn {
   	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   	$output['data'] = "Updated user $id.";
 
-  	mysqli_close($conn);
+  	mysqli_close($this->conn);
 
   	echo json_encode($output);
 
@@ -281,11 +271,7 @@ class dbConn {
 
   	$executionStartTime = microtime(true);
 
-  	include("config.php");
-
   	header('Content-Type: application/json; charset=UTF-8');
-
-  	$conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname);
 
   	if (mysqli_connect_errno()) {
 
@@ -295,7 +281,7 @@ class dbConn {
   		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -304,7 +290,7 @@ class dbConn {
   	}
 
   	$query = "DELETE FROM users WHERE id='$id'";
-  	$result = $conn->query($query);
+  	$result = $this->conn->query($query);
 
   	if (!$result) {
 
@@ -313,7 +299,7 @@ class dbConn {
   		$output['status']['description'] = "query failed";
   		$output['data'] = [];
 
-  		mysqli_close($conn);
+  		mysqli_close($this->conn);
 
   		echo json_encode($output);
 
@@ -335,7 +321,7 @@ class dbConn {
   	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
   	$output['data'] = "User $id deleted.";
 
-  	mysqli_close($conn);
+  	mysqli_close($this->conn);
 
   	echo json_encode($output);
 
