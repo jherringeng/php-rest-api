@@ -5,42 +5,64 @@ class dbConn {
 	private $cd_user = "root"; // user name
 	private $cd_password = ""; // password
 	private $cd_dbname = "users"; // database name
+  private $executionStartTime;
 
-  private $conn;
+  private $conn = NULL;
 
   function __construct() {
-    $this->conn = new mysqli($this->cd_host, $this->cd_user, $this->cd_password, $this->cd_dbname);
+    // $this->conn = new mysqli($this->cd_host, $this->cd_user, $this->cd_password, $this->cd_dbname);
+
+    $this->executionStartTime= microtime(true);
+
+    try{
+      $conn = new PDO("mysql:host=$this->cd_host;dbname=$this->cd_dbname;charset=utf8;collation=utf8_unicode_ci", "$this->cd_user", "$this->cd_password");
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch(PDOException $e) {
+      $output['status']['code'] = "300";
+  		$output['status']['name'] = "failure";
+  		$output['status']['description'] = "database unavailable";
+  		$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
+  		$output['data'] = $e->getMessage();
+
+      echo json_encode($output);
+
+  		exit;
+    }
+    $this->conn = $conn;
+
+    // Exits and returns error
+    // if (mysqli_connect_errno()) {
+    //
+  	// 	$output['status']['code'] = "300";
+  	// 	$output['status']['name'] = "failure";
+  	// 	$output['status']['description'] = "database unavailable";
+  	// 	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
+  	// 	$output['data'] = [];
+    //
+  	// 	mysqli_close($this->conn);
+    //
+  	// 	echo json_encode($output);
+    //
+  	// 	exit;
+    //
+  	// }
+
   }
 
   function getUsers() {
 
+    // To be removed for production
   	ini_set('display_errors', 'On');
   	error_reporting(E_ALL);
 
-  	$executionStartTime = microtime(true);
+  	$this->executionStartTime = microtime(true);
 
   	header('Content-Type: application/json; charset=UTF-8');
 
-  	if (mysqli_connect_errno()) {
-
-  		$output['status']['code'] = "300";
-  		$output['status']['name'] = "failure";
-  		$output['status']['description'] = "database unavailable";
-  		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-  		$output['data'] = [];
-
-  		mysqli_close($this->conn);
-
-  		echo json_encode($output);
-
-  		exit;
-
-  	}
-
   	$query = "SELECT * FROM users";
-  	$result = $this->conn->query($query);
+  	$data = $this->conn->query($query)->fetchAll();
 
-  	if (!$result) {
+  	if (!$data) {
 
   		$output['status']['code'] = "400";
   		$output['status']['name'] = "executed";
@@ -55,21 +77,22 @@ class dbConn {
 
   	}
 
-     	$data = [];
+     	// $data = [];
 
-  	while ($row = mysqli_fetch_assoc($result)) {
 
-  		array_push($data, $row);
-
-  	}
+  	// while ($row = mysqli_fetch_assoc($result)) {
+    //
+  	// 	array_push($data, $row);
+    //
+  	// }
 
   	$output['status']['code'] = "200";
   	$output['status']['name'] = "ok";
   	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
   	$output['data'] = $data;
 
-  	mysqli_close($this->conn);
+  	$this->conn = NULL;
 
   	echo json_encode($output);
 
@@ -80,25 +103,9 @@ class dbConn {
   	ini_set('display_errors', 'On');
   	error_reporting(E_ALL);
 
-  	$executionStartTime = microtime(true);
+  	$this->executionStartTime = microtime(true);
 
   	header('Content-Type: application/json; charset=UTF-8');
-
-  	if (mysqli_connect_errno()) {
-
-  		$output['status']['code'] = "300";
-  		$output['status']['name'] = "failure";
-  		$output['status']['description'] = "database unavailable";
-  		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-  		$output['data'] = [];
-
-  		mysqli_close($this->conn);
-
-  		echo json_encode($output);
-
-  		exit;
-
-  	}
 
   	$query = "SELECT * FROM users WHERE id='$id'";
   	$result = $this->conn->query($query);
@@ -129,7 +136,7 @@ class dbConn {
   	$output['status']['code'] = "200";
   	$output['status']['name'] = "ok";
   	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
   	$output['data'] = $data;
 
   	mysqli_close($this->conn);
@@ -143,25 +150,11 @@ class dbConn {
   	ini_set('display_errors', 'On');
   	error_reporting(E_ALL);
 
-  	$executionStartTime = microtime(true);
+  	$this->executionStartTime = microtime(true);
 
   	header('Content-Type: application/json; charset=UTF-8');
 
-  	if (mysqli_connect_errno()) {
 
-  		$output['status']['code'] = "300";
-  		$output['status']['name'] = "failure";
-  		$output['status']['description'] = "database unavailable";
-  		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-  		$output['data'] = [];
-
-  		mysqli_close($this->conn);
-
-  		echo json_encode($output);
-
-  		exit;
-
-  	}
 
   	parse_str(file_get_contents("php://input"),$put_vars);
     $firstName = $put_vars['firstName']; $surname = $put_vars['surname']; $dob = $put_vars['dob'];
@@ -196,7 +189,7 @@ class dbConn {
   	$output['status']['code'] = "201";
   	$output['status']['name'] = "ok";
   	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
   	$output['data'] = "Inserted user.";
 
   	mysqli_close($this->conn);
@@ -210,25 +203,9 @@ class dbConn {
   	ini_set('display_errors', 'On');
   	error_reporting(E_ALL);
 
-  	$executionStartTime = microtime(true);
+  	$this->executionStartTime = microtime(true);
 
   	header('Content-Type: application/json; charset=UTF-8');
-
-  	if (mysqli_connect_errno()) {
-
-  		$output['status']['code'] = "300";
-  		$output['status']['name'] = "failure";
-  		$output['status']['description'] = "database unavailable";
-  		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-  		$output['data'] = [];
-
-  		mysqli_close($this->conn);
-
-  		echo json_encode($output);
-
-  		exit;
-
-  	}
 
   	parse_str(file_get_contents("php://input"), $post_vars);
     $id = $post_vars['id']; $firstName = $post_vars['firstName']; $surname = $post_vars['surname'];
@@ -255,7 +232,7 @@ class dbConn {
     $output['status']['code'] = "201";
   	$output['status']['name'] = "ok";
   	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
   	$output['data'] = "Updated user $id.";
 
   	mysqli_close($this->conn);
@@ -269,25 +246,9 @@ class dbConn {
   	ini_set('display_errors', 'On');
   	error_reporting(E_ALL);
 
-  	$executionStartTime = microtime(true);
+  	$this->executionStartTime = microtime(true);
 
   	header('Content-Type: application/json; charset=UTF-8');
-
-  	if (mysqli_connect_errno()) {
-
-  		$output['status']['code'] = "300";
-  		$output['status']['name'] = "failure";
-  		$output['status']['description'] = "database unavailable";
-  		$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-  		$output['data'] = [];
-
-  		mysqli_close($this->conn);
-
-  		echo json_encode($output);
-
-  		exit;
-
-  	}
 
   	$query = "DELETE FROM users WHERE id='$id'";
   	$result = $this->conn->query($query);
@@ -318,7 +279,7 @@ class dbConn {
   	$output['status']['code'] = "200";
   	$output['status']['name'] = "ok";
   	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
   	$output['data'] = "User $id deleted.";
 
   	mysqli_close($this->conn);
