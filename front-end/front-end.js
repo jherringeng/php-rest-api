@@ -39,7 +39,7 @@ function getUsers() {
         console.log(result['data']);
         users = result['data'];
         displayInfo()
-        addToConsole("Got all users")
+        addToConsole("Returned users")
       }
 
     },
@@ -68,12 +68,15 @@ function getUser() {
     },
     success: function(result) {
 
-      console.log(result)
       if (result.status.name == "ok") {
         // console.log(result['data'])
         console.log(result['data']);
         addToConsole(result['data']);
 
+      }
+
+      if (result.status.code == 400) {
+        addToConsole(`No user with id = ${id}`);
       }
 
     },
@@ -148,10 +151,13 @@ function updateUser() {
     },
     success: function(result) {
 
-      console.log(result)
       if (result.status.name == "ok") {
         console.log("Updated user");
-        addToConsole("Updated user");
+        addToConsole(`Updated user with id = ${id}`);
+      }
+
+      if (result.status.code == 400) {
+        addToConsole(`No user with id = ${id}`);
       }
 
     },
