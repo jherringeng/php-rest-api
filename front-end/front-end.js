@@ -1,7 +1,11 @@
 var users;
-var keyAPI = 'wpf0okfhmjoyb3v0gw16';
-var keyAPI = $( "#api" ).val();;
+const keyAPI = 'wpf0okfhmjoyb3v0gw16';
 
+$( document ).ready(function() {
+    getUsers();
+});
+
+// Display users in the table
 function displayInfo() {
   $( "#tableData" ).html('');
   users.forEach(function(user){
@@ -17,12 +21,13 @@ function displayInfo() {
   });
 }
 
+// Add to console log on page
 function addToConsole(message) {
   $( "#console" ).append( `<p>${message}</p>`);
 }
 
 function getUsers() {
-
+  const keyAPI = $( "#api" ).val();
   const url = "http://localhost/php-rest-api/back-end/index.php";
   $.ajax({
     url: url,
@@ -42,7 +47,6 @@ function getUsers() {
         console.log(result['data']);
         users = result['data'];
         displayInfo()
-        addToConsole(`${url} returned users`)
       }
 
     },
@@ -58,6 +62,7 @@ $(document).on('click', '#get', function () {
 });
 
 function getUser() {
+  const keyAPI = $( "#api" ).val();
   const id = $('#id').val();
   const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
   $.ajax({
@@ -98,6 +103,7 @@ $(document).on('click', '#insert', function () {
 
 function insertUser() {
 
+  const keyAPI = $( "#api" ).val();
   const firstName = $('#firstName').val(), surname = $('#surname').val(), dob = $('#dob').val();
   const email = $('#email').val(), phone = $('#phone').val();
   const url = "http://localhost/php-rest-api/back-end/index.php";
@@ -139,6 +145,7 @@ $(document).on('click', '#update', function () {
 
 function updateUser() {
 
+  const keyAPI = $( "#api" ).val();
   const id = $('#id').val(), firstName = $('#firstName').val(), surname = $('#surname').val(), dob = $('#dob').val();
   const email = $('#email').val(), phone = $('#phone').val();
 
@@ -186,6 +193,7 @@ $(document).on('click', '#delete', function () {
 });
 
 function deleteUser(id) {
+  const keyAPI = $( "#api" ).val();
   const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
   $.ajax({
     url: url,
@@ -211,5 +219,3 @@ function deleteUser(id) {
     }
   });
 }
-
-getUsers();

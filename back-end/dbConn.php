@@ -147,9 +147,26 @@ class dbConn {
 
   	header('Content-Type: application/json; charset=UTF-8');
 
-  	parse_str(file_get_contents("php://input"),$put_vars);
-    $firstName = $put_vars['firstName']; $surname = $put_vars['surname']; $dob = $put_vars['dob'];
-  	$email = $put_vars['email']; $phone = $put_vars['phone'];
+    try {
+
+      parse_str(file_get_contents("php://input"),$put_vars);
+      $firstName = $put_vars['firstName']; $surname = $put_vars['surname']; $dob = $put_vars['dob'];
+    	$email = $put_vars['email']; $phone = $put_vars['phone'];
+
+    } catch (\Exception $e) {
+
+      $output['status']['code'] = "400";
+  		$output['status']['name'] = "executed";
+  		$output['status']['description'] = "Insert failed";
+  		$output['data'] = "Add user failed";
+
+      $this->conn = NULL;
+
+  		echo json_encode($output);
+
+  		exit;
+
+    }
 
     $stmt = $this->conn->prepare("INSERT INTO users (first_name, surname, dob, email, phone ) VALUES (?, ?, ?, ?, ?)");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone]);
@@ -188,9 +205,27 @@ class dbConn {
 
   	header('Content-Type: application/json; charset=UTF-8');
 
-  	parse_str(file_get_contents("php://input"), $post_vars);
-    $id = $_POST['id']; $firstName = $_POST['firstName']; $surname = $_POST['surname'];
-  	$dob = $_POST['dob'];	$email = $_POST['email']; $phone = $_POST['phone'];
+    try {
+
+      $id = $_POST['id']; $firstName = $_POST['firstName']; $surname = $_POST['surname'];
+    	$dob = $_POST['dob'];	$email = $_POST['email']; $phone = $_POST['phone'];
+
+    } catch (\Exception $e) {
+
+      $output['status']['code'] = "400";
+  		$output['status']['name'] = "executed";
+  		$output['status']['description'] = "Update failed";
+  		$output['data'] = "Update user failed";
+
+      $this->conn = NULL;
+
+  		echo json_encode($output);
+
+  		exit;
+
+    }
+
+
 
     $stmt = $this->conn->prepare("UPDATE users SET first_name=?, surname=?, dob=?, email=?, phone=? WHERE id=?");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone,$id]);
@@ -238,7 +273,7 @@ class dbConn {
   		$output['status']['code'] = "400";
   		$output['status']['name'] = "executed";
   		$output['status']['description'] = "query failed";
-  		$output['data'] = [];
+  		$output['data'] = "Delete user failed: no user with id $id.";
 
   		$this->conn = NULL;
 
