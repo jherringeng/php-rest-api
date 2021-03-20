@@ -1,6 +1,6 @@
 var users;
 var keyAPI = 'wpf0okfhmjoyb3v0gw16';
-// var keyAPI = 'gsbsgnsnsfn';
+var keyAPI = $( "#api" ).val();;
 
 function displayInfo() {
   $( "#tableData" ).html('');

@@ -35,6 +35,33 @@ class dbConn {
 
   }
 
+  // Get a user from DB
+  function checkAPIkey($APIkey) {
+
+  	ini_set('display_errors', 'On');
+  	error_reporting(E_ALL);
+
+    $stmt = $this->conn->prepare("SELECT * FROM api_keys WHERE api_key=?");
+    $stmt->execute([$APIkey]);
+    $data = $stmt->fetch();
+
+  	if (!$data) {
+
+      $output['status']['code'] = "401";
+    	$output['status']['name'] = "ok";
+    	$output['status']['description'] = "Auth failed.";
+    	$output['data'] = "Not authorised.";
+
+      echo json_encode($output);
+
+      exit;
+
+  	}
+
+  	return true;
+
+  }
+
   function getUsers() {
 
     // To be removed for production
@@ -81,7 +108,6 @@ class dbConn {
 
   	header('Content-Type: application/json; charset=UTF-8');
 
-  	$query = "SELECT * FROM users WHERE id='$id'";
     $stmt = $this->conn->prepare("SELECT * FROM users WHERE id=?");
     $stmt->execute([$id]);
     $data = $stmt->fetch();
@@ -124,7 +150,6 @@ class dbConn {
   	parse_str(file_get_contents("php://input"),$put_vars);
     $firstName = $put_vars['firstName']; $surname = $put_vars['surname']; $dob = $put_vars['dob'];
   	$email = $put_vars['email']; $phone = $put_vars['phone'];
-
 
     $stmt = $this->conn->prepare("INSERT INTO users (first_name, surname, dob, email, phone ) VALUES (?, ?, ?, ?, ?)");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone]);

@@ -10,6 +10,21 @@
 
   $headers = apache_request_headers();
 
+  $dbConn = new dbConn();
+
+  if($dbConn->checkAPIkey($headers['APIKEY'])) {
+
+    $output['status']['code'] = "401";
+  	$output['status']['name'] = "ok";
+  	$output['status']['description'] = "Auth failed.";
+  	$output['data'] = "Authorised.";
+
+    echo json_encode($output);
+
+    exit;
+
+  } 
+
   if ($headers['APIKEY'] !== 'wpf0okfhmjoyb3v0gw16') {
     $output['status']['code'] = "401";
   	$output['status']['name'] = "ok";
@@ -21,8 +36,6 @@
     exit;
 
   } else {
-
-    $dbConn = new dbConn();
 
     $data = $_SERVER['REQUEST_URI'];
 
