@@ -28,17 +28,23 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-      // Can use str_contains in PHP 8
-      if (strpos($data, '?') !== false && strpos($data, '=') !== false) {
-        $id = explode('?', $_SERVER['REQUEST_URI']);
-        $id = explode('=', $id[1]);
-        $id = $id[1];
+      // Can use str_contains in PHP 8 (currently using PHP 7)
+      if (strpos($data, '?') == false && strpos($data, '=') == false) {
 
-        $dbConn->getUser($id);
+        $dbConn->getUsers();
 
       } else {
 
-        $dbConn->getUsers();
+        if(array_key_exists('id', $_GET)) {
+
+          $id = $_GET['id'];
+          $dbConn->getUser($id);
+
+        } else {
+
+          outputURLError();
+
+        }
 
       }
 
@@ -50,7 +56,9 @@
 
     }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    if ($_SERVER['REQUEST_METHOD'] === 'DELETE')
+
+      $DELETE = parse_url();
 
       $id = explode('?', $_SERVER['REQUEST_URI']);
       $id = explode('=', $id[1]);
@@ -62,24 +70,20 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-      // Can use str_contains in PHP 8
-      if (strpos($data, '?') !== false) {
-        $id = explode('?', $_SERVER['REQUEST_URI']);
-        $id = explode('=', $id[1]);
-        $id = $id[1];
+      if(array_key_exists('id', $_POST)) {
 
+        $id = $_POST['id'];
         $dbConn->updateUser($id);
 
       } else {
 
-        $output['status']['code'] = "400";
-    		$output['status']['name'] = "executed";
-    		$output['status']['description'] = "query failed";
-    		$output['data'] = "URL string has incorrect format.";
+        outputURLError();
 
       }
 
     }
+
+  }
 
 
     // // Testing code
@@ -95,6 +99,16 @@
     //
     // echo json_encode($output);
 
-  }
 
-?>
+  function outputURLError() {
+
+    $output['status']['code'] = "400";
+    $output['status']['name'] = "executed";
+    $output['status']['description'] = "query failed";
+    $output['data'] = "URL string has incorrect format.";
+
+    echo json_encode($output);
+
+    exit;
+
+  }

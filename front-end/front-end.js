@@ -55,9 +55,9 @@ $(document).on('click', '#get', function () {
 });
 
 function getUser() {
-  const id = $('#id').val();
+  // const id = $('#id').val();
   $.ajax({
-    url: `http://localhost/php-rest-api/back-end/index.php?id=${id}`,
+    url: `http://localhost/php-rest-api/back-end/index.php?id=b`,
     type: 'GET',
     dataType: 'json',
     headers: {
@@ -76,7 +76,7 @@ function getUser() {
       }
 
       if (result.status.code == 400) {
-        addToConsole(`No user with id = ${id}`);
+        addToConsole(result['data']);
       }
 
     },
@@ -152,12 +152,13 @@ function updateUser() {
     success: function(result) {
 
       if (result.status.name == "ok") {
-        console.log("Updated user");
-        addToConsole(`Updated user with id = ${id}`);
+        console.log(result['data']);
+        addToConsole(result['data']);
       }
 
       if (result.status.code == 400) {
-        addToConsole(`No user with id = ${id}`);
+        console.log(result['data']);
+        addToConsole(result['data']);
       }
 
     },

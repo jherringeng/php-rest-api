@@ -91,7 +91,7 @@ class dbConn {
   		$output['status']['code'] = "400";
   		$output['status']['name'] = "executed";
   		$output['status']['description'] = "query failed";
-  		$output['data'] = [];
+  		$output['data'] = "Get user failed: No user with id $id";
 
   		$this->conn = NULL;
 
@@ -164,11 +164,9 @@ class dbConn {
   	header('Content-Type: application/json; charset=UTF-8');
 
   	parse_str(file_get_contents("php://input"), $post_vars);
-    $id = $post_vars['id']; $firstName = $post_vars['firstName']; $surname = $post_vars['surname'];
-  	$dob = $post_vars['dob'];	$email = $post_vars['email']; $phone = $post_vars['phone'];
+    $id = $_POST['id']; $firstName = $_POST['firstName']; $surname = $_POST['surname'];
+  	$dob = $_POST['dob'];	$email = $_POST['email']; $phone = $_POST['phone'];
 
-  	// $query = "UPDATE users SET first_name='$firstName', surname='$surname', dob='$dob', email='$email', phone='$phone' WHERE id='$id'";
-  	// $result = $this->conn->query($query);
     $stmt = $this->conn->prepare("UPDATE users SET first_name=?, surname=?, dob=?, email=?, phone=? WHERE id=?");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone,$id]);
 
@@ -177,7 +175,7 @@ class dbConn {
   		$output['status']['code'] = "400";
   		$output['status']['name'] = "executed";
   		$output['status']['description'] = "query failed";
-  		$output['data'] = [];
+  		$output['data'] = "Update user failed: no user with id $id";
 
   		$this->conn = NULL;
 
