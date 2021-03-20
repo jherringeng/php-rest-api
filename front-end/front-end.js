@@ -3,6 +3,7 @@ var keyAPI = 'wpf0okfhmjoyb3v0gw16';
 // var keyAPI = 'gsbsgnsnsfn';
 
 function displayInfo() {
+  $( "#tableData" ).html('');
   users.forEach(function(user){
     $( "#tableData" ).append( `
       <tr id="user${user.id}" class="user" data-id="${user.id}">
@@ -21,8 +22,10 @@ function addToConsole(message) {
 }
 
 function getUsers() {
+
+  const url = "http://localhost/php-rest-api/back-end/index.php";
   $.ajax({
-    url: "http://localhost/php-rest-api/back-end/index.php",
+    url: url,
     type: 'GET',
     dataType: 'json',
     headers: {
@@ -39,7 +42,7 @@ function getUsers() {
         console.log(result['data']);
         users = result['data'];
         displayInfo()
-        addToConsole("Returned users")
+        addToConsole(`${url} returned users`)
       }
 
     },
@@ -55,9 +58,10 @@ $(document).on('click', '#get', function () {
 });
 
 function getUser() {
-  // const id = $('#id').val();
+  const id = $('#id').val();
+  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
   $.ajax({
-    url: `http://localhost/php-rest-api/back-end/index.php?id=b`,
+    url: url,
     type: 'GET',
     dataType: 'json',
     headers: {
@@ -70,13 +74,14 @@ function getUser() {
 
       if (result.status.name == "ok") {
         // console.log(result['data'])
-        console.log(result['data']);
-        addToConsole(result['data']);
-
+        console.log(result);
+        addToConsole(`${url} returns ${result['data']}`);
+        getUsers();
       }
 
       if (result.status.code == 400) {
-        addToConsole(result['data']);
+        console.log(result);
+        addToConsole(`${url} returns ${result['data']}`);
       }
 
     },
@@ -86,6 +91,7 @@ function getUser() {
   });
 }
 
+// Event listener for insert user
 $(document).on('click', '#insert', function () {
   insertUser();
 });
@@ -94,9 +100,10 @@ function insertUser() {
 
   const firstName = $('#firstName').val(), surname = $('#surname').val(), dob = $('#dob').val();
   const email = $('#email').val(), phone = $('#phone').val();
+  const url = "http://localhost/php-rest-api/back-end/index.php";
 
   $.ajax({
-    url: "http://localhost/php-rest-api/back-end/index.php",
+    url: url,
     type: 'PUT',
     dataType: 'json',
     headers: {
@@ -113,8 +120,9 @@ function insertUser() {
 
       console.log(result)
       if (result.status.name == "ok") {
-        console.log("Added user")
-        addToConsole("Added user");
+        console.log(result)
+        addToConsole(`${url} returns ${result['data']}`);
+        getUsers();
       }
 
     },
@@ -152,12 +160,13 @@ function updateUser() {
     success: function(result) {
 
       if (result.status.name == "ok") {
-        console.log(result['data']);
+        console.log(result);
         addToConsole(result['data']);
+        getUsers();
       }
 
       if (result.status.code == 400) {
-        console.log(result['data']);
+        console.log(result);
         addToConsole(result['data']);
       }
 
@@ -168,7 +177,7 @@ function updateUser() {
   });
 }
 
-// Event listener for # delete
+// Event listener for delete user
 $(document).on('click', '#delete', function () {
 
   const id = $('#id').val();
@@ -177,8 +186,9 @@ $(document).on('click', '#delete', function () {
 });
 
 function deleteUser(id) {
+  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
   $.ajax({
-    url: `http://localhost/php-rest-api/back-end/index.php?id=${id}`,
+    url: url,
     type: 'DELETE',
     dataType: 'json',
     data: {
@@ -190,8 +200,9 @@ function deleteUser(id) {
     success: function(result) {
 
       if (result.status.name == "ok") {
-        console.log("Deleted user")
-        addToConsole("Deleted user");
+        console.log(result);
+        addToConsole(`${url} returns ${result['data']}`);
+        getUsers();
       }
 
     },

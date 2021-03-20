@@ -56,15 +56,36 @@
 
     }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'DELETE')
+    if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
-      $DELETE = parse_url();
+      $url = parse_url($_SERVER['REQUEST_URI']);
+      parse_str($url['query'], $DELETE);
 
-      $id = explode('?', $_SERVER['REQUEST_URI']);
-      $id = explode('=', $id[1]);
-      $id = $id[1];
+      // $output['status']['code'] = "200";
+    	// $output['status']['name'] = "ok";
+    	// $output['status']['description'] = "success";
+    	// $output['data'] = $DELETE;
+      //
+      // echo json_encode($output);
+      //
+      // exit;
 
-      $dbConn->deleteUser($id);
+      if(array_key_exists('id', $DELETE)) {
+
+        $id = $DELETE['id'];
+        $dbConn->deleteUser($id);
+
+      } else {
+
+        outputURLError();
+
+      }
+
+      // $id = explode('?', $_SERVER['REQUEST_URI']);
+      // $id = explode('=', $id[1]);
+      // $id = $id[1];
+      //
+      // $dbConn->deleteUser($id);
 
     }
 
