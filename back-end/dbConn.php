@@ -170,7 +170,7 @@ class dbConn {
     }
 
     // Ensures DOB is in correct format
-    $dob = isDateMySqlFormat($dob);
+    $dob = $this->isDateMySqlFormat($dob);
 
     // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("INSERT INTO users (first_name, surname, dob, email, phone ) VALUES (?, ?, ?, ?, ?)");
@@ -231,7 +231,7 @@ class dbConn {
     }
 
     // Ensures DOB is in correct format
-    $dob = isDateMySqlFormat($dob);
+    $dob = $this->isDateMySqlFormat($dob);
 
     // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("UPDATE users SET first_name=?, surname=?, dob=?, email=?, phone=? WHERE id=?");
@@ -310,7 +310,7 @@ class dbConn {
 
       // Throw exception if nothing is passed (prevents same day date)
       if (!$date) {
-        throw new \Exception('No date passed.');
+        throw new \Exception('No date passed to API.');
       }
 
       // Create date
@@ -321,10 +321,25 @@ class dbConn {
         throw new \Exception('Invalid date format. Use YYYY-MM-DD.');
       }
 
-      // Ensure date is in mySQL format NOTE: may alter switch month and day
-      $date = date_format($date, 'Y-m-d');
+      // Error if DOB has year before
+      $dateYear = date_format($date, 'Y');
+      if ($dateYear < 1900) {
+        throw new \Exception('Invalid date of birth. Birth year must be after 1900.');
+      }
 
-      return $date;
+      // Gets date 16 years ago for valid DOB - 16 years or older
+      $maxDOB = strtotime("-16 year", time());
+      $maxDOB = date("Y-m-d", $maxDOB);
+
+      if ($date >= $maxDOB) {
+        throw new \Exception('Invalid date of birth. User must be at least 16 years old.');
+      }
+
+      // Ensure date is in mySQL format NOTE: may switch month and day
+      $date_return = date_format($date, 'Y-m-d');
+
+      // Returns formatted DOB if no errors thrown
+      return $date_return;
 
     } catch (Exception $e) {
 
