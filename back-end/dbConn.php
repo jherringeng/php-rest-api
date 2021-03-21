@@ -108,6 +108,7 @@ class dbConn {
 
   	header('Content-Type: application/json; charset=UTF-8');
 
+    // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("SELECT * FROM users WHERE id=?");
     $stmt->execute([$id]);
     $data = $stmt->fetch();
@@ -153,7 +154,7 @@ class dbConn {
       $firstName = $put_vars['firstName']; $surname = $put_vars['surname']; $dob = $put_vars['dob'];
     	$email = $put_vars['email']; $phone = $put_vars['phone'];
 
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
 
       $output['status']['code'] = "400";
   		$output['status']['name'] = "executed";
@@ -168,6 +169,10 @@ class dbConn {
 
     }
 
+    // Ensures DOB is in correct format
+    $dob = isDateMySqlFormat($dob);
+
+    // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("INSERT INTO users (first_name, surname, dob, email, phone ) VALUES (?, ?, ?, ?, ?)");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone]);
 
@@ -225,8 +230,10 @@ class dbConn {
 
     }
 
+    // Ensures DOB is in correct format
+    $dob = isDateMySqlFormat($dob);
 
-
+    // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("UPDATE users SET first_name=?, surname=?, dob=?, email=?, phone=? WHERE id=?");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone,$id]);
 
@@ -264,6 +271,7 @@ class dbConn {
 
   	header('Content-Type: application/json; charset=UTF-8');
 
+    // Passes query to DB after being processed to prevent SQL injection
   	$query = "DELETE FROM users WHERE id=?";
   	$stmt = $this->conn->prepare($query);
     $result = $stmt->execute([$id]);
@@ -292,6 +300,45 @@ class dbConn {
   	$this->conn = NULL;
 
   	echo json_encode($output);
+
+  }
+
+  // Processes date for storage as mySQL date
+  function isDateMySqlFormat($date) {
+
+    try {
+
+      // Throw exception if nothing is passed (prevents same day date)
+      if (!$date) {
+        throw new \Exception('No date passed.');
+      }
+
+      // Create date
+      $date=date_create($date);
+
+      // Throw exception if $date isn't in a date format
+      if (!$date) {
+        throw new \Exception('Invalid date format. Use YYYY-MM-DD.');
+      }
+
+      // Ensure date is in mySQL format NOTE: may alter switch month and day
+      $date = date_format($date, 'Y-m-d');
+
+      return $date;
+
+    } catch (Exception $e) {
+
+      $output['status']['code'] = "400";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "query failed";
+      $output['data'] = $e->getMessage();
+
+      $this->conn = NULL;
+
+      echo json_encode($output);
+
+      exit;
+    }
 
   }
 
