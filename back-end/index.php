@@ -24,7 +24,7 @@
     $output['status']['description'] = "Auth failed.";
     $output['data'] = "No API key in header.";
 
-    $this->conn = NULL;
+    $dbConn->conn = NULL;
 
     echo json_encode($output);
 
@@ -48,7 +48,7 @@
 
     else {
 
-      outputURLError();
+      outputURLError($dbConn);
 
     }
 
@@ -71,7 +71,7 @@
 
     } else {
 
-      outputURLError();
+      outputURLError($dbConn);
 
     }
 
@@ -96,8 +96,8 @@
   }
 
   // Returns error codes, closes dbConn and exits script for URL error
-  function outputURLError() {
-
+  function outputURLError($dbConn)
+  {
     $output['status']['code'] = "400";
     $output['status']['name'] = "executed";
     $output['status']['description'] = "query failed";
@@ -105,7 +105,7 @@
 
     echo json_encode($output);
 
-    $this->conn = NULL;
+    $dbConn->conn = NULL;
 
     exit;
 

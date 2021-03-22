@@ -370,6 +370,7 @@ class DBConn {
     }
   }
 
+  // Regex for validating phone numbers
   function validatePhone($phone)
   {
     // Regex for HTML 5 form validation (input type email)
@@ -391,6 +392,23 @@ class DBConn {
       exit;
 
     }
+  }
+
+  // Generates an API key (not used in practice - could generate then return new user API keys)
+  function generateAPIkey()
+  {
+    // Generate random string for APIkey (20 letters long)
+    $length = 20;
+    $random_string = '';
+    for($i = 0; $i < $length; $i++) {
+        $number = random_int(0, 36);
+        $character = base_convert($number, 10, 36);
+        $random_string .= $character;
+    }
+
+    $stmt = $this->conn->prepare("INSERT INTO api_keys ( api_key ) VALUES (?)");
+    $result = $stmt->execute([$random_string]);
+
   }
 
 }

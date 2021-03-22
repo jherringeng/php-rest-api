@@ -83,5 +83,3 @@ function secure_random_string($length) {
 
     return $random_string;
 }
-
-?>
