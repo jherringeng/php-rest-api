@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2021 at 03:53 PM
+-- Generation Time: Mar 22, 2021 at 01:36 AM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.2.22
 
@@ -32,7 +32,7 @@ CREATE TABLE `users` (
   `id` int(3) NOT NULL,
   `first_name` char(50) DEFAULT NULL,
   `surname` char(50) DEFAULT NULL,
-  `dob` char(30) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
   `phone` char(15) DEFAULT NULL,
   `email` char(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

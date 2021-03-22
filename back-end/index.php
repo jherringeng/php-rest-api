@@ -9,7 +9,7 @@
   include("dbConn.php");
 
   // Start db connection object (includes functions for CRUD)
-  $dbConn = new dbConn();
+  $dbConn = new DBConn();
 
   // Tries to get APIkey
   try {

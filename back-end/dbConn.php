@@ -1,5 +1,5 @@
 <?php
-class dbConn {
+class DBConn {
 
   private $cd_host = "127.0.0.1";
 	private $cd_user = "root"; // user name
@@ -148,11 +148,13 @@ class dbConn {
 
   	header('Content-Type: application/json; charset=UTF-8');
 
+    // Try and catch any incorrect array references
     try {
 
       parse_str(file_get_contents("php://input"),$put_vars);
-      $firstName = $put_vars['firstName']; $surname = $put_vars['surname']; $dob = $put_vars['dob'];
-    	$email = $put_vars['email']; $phone = $put_vars['phone'];
+      $firstName = $this->validateName($put_vars['firstName']); $surname = $this->validateName($put_vars['surname']);
+      $dob = $this->isDateMySqlFormat($put_vars['dob']); $email = $this->validateEmail($put_vars['email']);
+      $phone = $this->validatePhone($put_vars['phone']);
 
     } catch (Exception $e) {
 
@@ -168,9 +170,6 @@ class dbConn {
   		exit;
 
     }
-
-    // Ensures DOB is in correct format
-    $dob = $this->isDateMySqlFormat($dob);
 
     // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("INSERT INTO users (first_name, surname, dob, email, phone ) VALUES (?, ?, ?, ?, ?)");
@@ -212,8 +211,9 @@ class dbConn {
 
     try {
 
-      $id = $_POST['id']; $firstName = $_POST['firstName']; $surname = $_POST['surname'];
-    	$dob = $_POST['dob'];	$email = $_POST['email']; $phone = $_POST['phone'];
+      $id = $_POST['id']; $firstName = $this->validateName($_POST['firstName']);
+      $surname = $this->validateName($_POST['surname']); $dob = $_POST['dob'];
+      $email = $this->validateEmail($_POST['email']); $phone = $this->validatePhone($_POST['phone']);
 
     } catch (\Exception $e) {
 
@@ -327,16 +327,16 @@ class dbConn {
         throw new \Exception('Invalid date of birth. Birth year must be after 1900.');
       }
 
+      // Ensure date is in mySQL format NOTE: may switch month and day
+      $date_return = date_format($date, 'Y-m-d');
+
       // Gets date 16 years ago for valid DOB - 16 years or older
       $maxDOB = strtotime("-16 year", time());
       $maxDOB = date("Y-m-d", $maxDOB);
 
-      if ($date >= $maxDOB) {
+      if ($date_return >= $maxDOB) {
         throw new \Exception('Invalid date of birth. User must be at least 16 years old.');
       }
-
-      // Ensure date is in mySQL format NOTE: may switch month and day
-      $date_return = date_format($date, 'Y-m-d');
 
       // Returns formatted DOB if no errors thrown
       return $date_return;
@@ -355,6 +355,74 @@ class dbConn {
       exit;
     }
 
+  }
+
+  function validateName($name) {
+    if(preg_match("/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/", $name)) {
+
+      return $name;
+
+    } else {
+
+      $output['status']['code'] = "400";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "query failed";
+      $output['data'] = "Name not valid format.";
+
+      $this->conn = NULL;
+
+      echo json_encode($output);
+
+      exit;
+
+    }
+
+  }
+
+  function validateEmail($email) {
+
+    // Regex for HTML 5 form validation (input type email)
+    if(preg_match("/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/", $email)) {
+
+      return $email;
+
+    } else {
+
+      $output['status']['code'] = "400";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "query failed";
+      $output['data'] = "Email not valid format.";
+
+      $this->conn = NULL;
+
+      echo json_encode($output);
+
+      exit;
+
+    }
+  }
+
+  function validatePhone($phone) {
+
+    // Regex for HTML 5 form validation (input type email)
+    if(preg_match("/^[0-9\-\(\)\/\+\s]*$/", $phone)) {
+
+      return $phone;
+
+    } else {
+
+      $output['status']['code'] = "400";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "query failed";
+      $output['data'] = "Phone number not valid format.";
+
+      $this->conn = NULL;
+
+      echo json_encode($output);
+
+      exit;
+
+    }
   }
 
 }
