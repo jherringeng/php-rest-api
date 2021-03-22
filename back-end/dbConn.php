@@ -2,16 +2,15 @@
 class DBConn {
 
   private $cd_host = "127.0.0.1";
-	private $cd_user = "root"; // user name
-	private $cd_password = ""; // password
-	private $cd_dbname = "users"; // database name
+  private $cd_user = "root"; // user name
+  private $cd_password = ""; // password
+  private $cd_dbname = "users"; // database name
   private $executionStartTime;
 
   private $conn = NULL;
 
-  function __construct() {
-    // $this->conn = new mysqli($this->cd_host, $this->cd_user, $this->cd_password, $this->cd_dbname);
-
+  function __construct()
+  {
     $this->executionStartTime = microtime(true);
 
     try{
@@ -20,14 +19,14 @@ class DBConn {
     }
     catch(PDOException $e) {
       $output['status']['code'] = "300";
-  		$output['status']['name'] = "failure";
-  		$output['status']['description'] = "database unavailable";
-  		$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-  		$output['data'] = $e->getMessage();
+      $output['status']['name'] = "failure";
+      $output['status']['description'] = "database unavailable";
+      $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
+      $output['data'] = $e->getMessage();
 
       echo json_encode($output);
 
-  		exit;
+      exit;
 
     }
 
@@ -36,118 +35,99 @@ class DBConn {
   }
 
   // Get a user from DB
-  function checkAPIkey($APIkey) {
-
-  	ini_set('display_errors', 'On');
-  	error_reporting(E_ALL);
-
+  function checkAPIkey($APIkey)
+  {
     $stmt = $this->conn->prepare("SELECT * FROM api_keys WHERE api_key=?");
     $stmt->execute([$APIkey]);
     $data = $stmt->fetch();
 
-  	if (!$data) {
+    if (!$data) {
 
       $output['status']['code'] = "401";
-    	$output['status']['name'] = "ok";
-    	$output['status']['description'] = "Auth failed.";
-    	$output['data'] = "Not authorised.";
+      $output['status']['name'] = "ok";
+      $output['status']['description'] = "Auth failed.";
+      $output['data'] = "Not authorised.";
 
       echo json_encode($output);
 
       exit;
 
-  	}
+    }
 
-  	return true;
+    return true;
 
   }
 
-  function getUsers() {
+  function getUsers()
+  {
+    $query = "SELECT * FROM users";
+    $data = $this->conn->query($query)->fetchAll();
 
-    // To be removed for production
-  	ini_set('display_errors', 'On');
-  	error_reporting(E_ALL);
+    if (!$data) {
 
-  	header('Content-Type: application/json; charset=UTF-8');
+      $output['status']['code'] = "400";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "query failed";
+      $output['data'] = [];
 
-  	$query = "SELECT * FROM users";
-  	$data = $this->conn->query($query)->fetchAll();
+      $this->conn = NULL;
 
-  	if (!$data) {
+      echo json_encode($output);
 
-  		$output['status']['code'] = "400";
-  		$output['status']['name'] = "executed";
-  		$output['status']['description'] = "query failed";
-  		$output['data'] = [];
+      exit;
 
-  		$this->conn = NULL;
+    }
 
-  		echo json_encode($output);
+    $output['status']['code'] = "200";
+    $output['status']['name'] = "ok";
+    $output['status']['description'] = "success";
+    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
+    $output['data'] = $data;
 
-  		exit;
+    $this->conn = NULL;
 
-  	}
-
-  	$output['status']['code'] = "200";
-  	$output['status']['name'] = "ok";
-  	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-  	$output['data'] = $data;
-
-  	$this->conn = NULL;
-
-  	echo json_encode($output);
+    echo json_encode($output);
 
   }
 
   // Get a user from DB
-  function getUser($id) {
-
-  	ini_set('display_errors', 'On');
-  	error_reporting(E_ALL);
-
-  	header('Content-Type: application/json; charset=UTF-8');
-
+  function getUser($id)
+  {
     // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("SELECT * FROM users WHERE id=?");
     $stmt->execute([$id]);
     $data = $stmt->fetch();
 
-  	if (!$data) {
+    if (!$data) {
 
-  		$output['status']['code'] = "400";
-  		$output['status']['name'] = "executed";
-  		$output['status']['description'] = "query failed";
-  		$output['data'] = "Get user failed: No user with id $id";
+      $output['status']['code'] = "400";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "query failed";
+      $output['data'] = "Get user failed: No user with id $id";
 
-  		$this->conn = NULL;
+      $this->conn = NULL;
 
-  		echo json_encode($output);
+      echo json_encode($output);
 
-  		exit;
+      exit;
 
-  	}
+    }
 
-  	$output['status']['code'] = "200";
-  	$output['status']['name'] = "ok";
-  	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-  	$output['data'] = $data;
+    $output['status']['code'] = "200";
+    $output['status']['name'] = "ok";
+    $output['status']['description'] = "success";
+    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
+    $output['data'] = $data;
 
-  	$this->conn = NULL;
+    $this->conn = NULL;
 
-  	echo json_encode($output);
+    echo json_encode($output);
 
   }
 
   // Insert user to DB
   function insertUser()
   {
-  	ini_set('display_errors', 'On');
-  	error_reporting(E_ALL);
-
-  	header('Content-Type: application/json; charset=UTF-8');
-
     // Try and catch any incorrect array references
     try {
 
@@ -159,15 +139,15 @@ class DBConn {
     } catch (Exception $e) {
 
       $output['status']['code'] = "400";
-  		$output['status']['name'] = "executed";
-  		$output['status']['description'] = "Insert failed";
-  		$output['data'] = "Add user failed";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "Insert failed";
+      $output['data'] = "Add user failed";
 
       $this->conn = NULL;
 
-  		echo json_encode($output);
+      echo json_encode($output);
 
-  		exit;
+      exit;
 
     }
 
@@ -175,40 +155,35 @@ class DBConn {
     $stmt = $this->conn->prepare("INSERT INTO users (first_name, surname, dob, email, phone ) VALUES (?, ?, ?, ?, ?)");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone]);
 
-  	if (!$result) {
+    if (!$result) {
 
-  		$output['status']['code'] = "400";
-  		$output['status']['name'] = "executed";
-  		$output['status']['description'] = "Insert failed";
-  		$output['data'] = "Add user failed";
+      $output['status']['code'] = "400";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "Insert failed";
+      $output['data'] = "Add user failed";
 
-  		$this->conn = NULL;
+      $this->conn = NULL;
 
-  		echo json_encode($output);
+      echo json_encode($output);
 
-  		exit;
+      exit;
 
-  	}
+    }
 
-  	$output['status']['code'] = "201";
-  	$output['status']['name'] = "ok";
-  	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-  	$output['data'] = "Inserted user.";
+    $output['status']['code'] = "201";
+    $output['status']['name'] = "ok";
+    $output['status']['description'] = "success";
+    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
+    $output['data'] = "Inserted user.";
 
-  	$this->conn = NULL;
+    $this->conn = NULL;
 
-  	echo json_encode($output);
+    echo json_encode($output);
 
   }
 
-  function updateUser() {
-
-  	ini_set('display_errors', 'On');
-  	error_reporting(E_ALL);
-
-  	header('Content-Type: application/json; charset=UTF-8');
-
+  function updateUser()
+  {
     try {
 
       $id = $_POST['id']; $firstName = $this->validateName($_POST['firstName']);
@@ -218,15 +193,15 @@ class DBConn {
     } catch (\Exception $e) {
 
       $output['status']['code'] = "400";
-  		$output['status']['name'] = "executed";
-  		$output['status']['description'] = "Update failed";
-  		$output['data'] = "Update user failed";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "Update failed";
+      $output['data'] = "Update user failed";
 
       $this->conn = NULL;
 
-  		echo json_encode($output);
+      echo json_encode($output);
 
-  		exit;
+      exit;
 
     }
 
@@ -234,69 +209,64 @@ class DBConn {
     $stmt = $this->conn->prepare("UPDATE users SET first_name=?, surname=?, dob=?, email=?, phone=? WHERE id=?");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone,$id]);
 
-  	if (!$result) {
+    if (!$result) {
 
-  		$output['status']['code'] = "400";
-  		$output['status']['name'] = "executed";
-  		$output['status']['description'] = "query failed";
-  		$output['data'] = "Update user failed: no user with id $id";
+      $output['status']['code'] = "400";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "query failed";
+      $output['data'] = "Update user failed: no user with id $id";
 
-  		$this->conn = NULL;
+      $this->conn = NULL;
 
-  		echo json_encode($output);
+      echo json_encode($output);
 
-  		exit;
+      exit;
 
-  	}
+    }
 
     $output['status']['code'] = "201";
-  	$output['status']['name'] = "ok";
-  	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-  	$output['data'] = "Updated user $id.";
+    $output['status']['name'] = "ok";
+    $output['status']['description'] = "success";
+    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
+    $output['data'] = "Updated user $id.";
 
-  	$this->conn = NULL;
+    $this->conn = NULL;
 
-  	echo json_encode($output);
+    echo json_encode($output);
 
   }
 
   function deleteUser($id)
   {
-  	ini_set('display_errors', 'On');
-  	error_reporting(E_ALL);
-
-  	header('Content-Type: application/json; charset=UTF-8');
-
     // Passes query to DB after being processed to prevent SQL injection
-  	$query = "DELETE FROM users WHERE id=?";
-  	$stmt = $this->conn->prepare($query);
+    $query = "DELETE FROM users WHERE id=?";
+    $stmt = $this->conn->prepare($query);
     $result = $stmt->execute([$id]);
 
-  	if (!$result) {
+    if (!$result) {
 
-  		$output['status']['code'] = "400";
-  		$output['status']['name'] = "executed";
-  		$output['status']['description'] = "query failed";
-  		$output['data'] = "Delete user failed: no user with id $id.";
+      $output['status']['code'] = "400";
+      $output['status']['name'] = "executed";
+      $output['status']['description'] = "query failed";
+      $output['data'] = "Delete user failed: no user with id $id.";
 
-  		$this->conn = NULL;
+      $this->conn = NULL;
 
-  		echo json_encode($output);
+      echo json_encode($output);
 
-  		exit;
+      exit;
 
-  	}
+    }
 
-  	$output['status']['code'] = "204";
-  	$output['status']['name'] = "ok";
-  	$output['status']['description'] = "success";
-  	$output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-  	$output['data'] = "User $id deleted.";
+    $output['status']['code'] = "204";
+    $output['status']['name'] = "ok";
+    $output['status']['description'] = "success";
+    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
+    $output['data'] = "User $id deleted.";
 
-  	$this->conn = NULL;
+    $this->conn = NULL;
 
-  	echo json_encode($output);
+    echo json_encode($output);
 
   }
 

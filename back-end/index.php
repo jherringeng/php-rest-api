@@ -3,6 +3,11 @@
   include("generateAPIkey.php");
   include("dbConn.php");
 
+  ini_set('display_errors', 'On');
+  error_reporting(E_ALL);
+
+  header('Content-Type: application/json; charset=UTF-8');
+
   // Start db connection object (includes functions for CRUD)
   $dbConn = new DBConn();
 
