@@ -141,8 +141,8 @@ class DBConn {
   }
 
   // Insert user to DB
-  function insertUser() {
-
+  function insertUser()
+  {
   	ini_set('display_errors', 'On');
   	error_reporting(E_ALL);
 
@@ -212,7 +212,7 @@ class DBConn {
     try {
 
       $id = $_POST['id']; $firstName = $this->validateName($_POST['firstName']);
-      $surname = $this->validateName($_POST['surname']); $dob = $_POST['dob'];
+      $surname = $this->validateName($_POST['surname']); $dob = $this->isDateMySqlFormat($_POST['dob']);
       $email = $this->validateEmail($_POST['email']); $phone = $this->validatePhone($_POST['phone']);
 
     } catch (\Exception $e) {
@@ -229,9 +229,6 @@ class DBConn {
   		exit;
 
     }
-
-    // Ensures DOB is in correct format
-    $dob = $this->isDateMySqlFormat($dob);
 
     // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("UPDATE users SET first_name=?, surname=?, dob=?, email=?, phone=? WHERE id=?");
@@ -264,8 +261,8 @@ class DBConn {
 
   }
 
-  function deleteUser($id) {
-
+  function deleteUser($id)
+  {
   	ini_set('display_errors', 'On');
   	error_reporting(E_ALL);
 
@@ -304,8 +301,9 @@ class DBConn {
   }
 
   // Processes date for storage as mySQL date
-  function isDateMySqlFormat($date) {
-
+  function isDateMySqlFormat($date)
+  {
+    // Uses try catch statements to determine various conditions
     try {
 
       // Throw exception if nothing is passed (prevents same day date)
@@ -379,8 +377,8 @@ class DBConn {
 
   }
 
-  function validateEmail($email) {
-
+  function validateEmail($email)
+  {
     // Regex for HTML 5 form validation (input type email)
     if(preg_match("/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/", $email)) {
 
@@ -402,8 +400,8 @@ class DBConn {
     }
   }
 
-  function validatePhone($phone) {
-
+  function validatePhone($phone)
+  {
     // Regex for HTML 5 form validation (input type email)
     if(preg_match("/^[0-9\-\(\)\/\+\s]*$/", $phone)) {
 

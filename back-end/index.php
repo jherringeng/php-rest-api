@@ -1,10 +1,5 @@
 <?php
 
-  include("getUser.php");
-  include("insertUser.php");
-  include("updateUser.php");
-  include("deleteUser.php");
-  include("getUsers.php");
   include("generateAPIkey.php");
   include("dbConn.php");
 
