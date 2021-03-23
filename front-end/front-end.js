@@ -1,5 +1,5 @@
 var users;
-const keyAPI = 'wpf0okfhmjoyb3v0gw16';
+// const keyAPI = 'wpf0okfhmjoyb3v0gw16';
 
 $( document ).ready(function() {
     getUsers();
@@ -64,7 +64,7 @@ $(document).on('click', '#get', function () {
 function getUser() {
   const keyAPI = $( "#api" ).val();
   const id = $('#id').val();
-  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
+  const url = `http://localhost/php-rest-api/back-end/index.php?sid=${id}`;
   $.ajax({
     url: url,
     type: 'GET',
@@ -77,17 +77,9 @@ function getUser() {
     },
     success: function(result) {
 
-      if (result.status.name == "ok") {
-        // console.log(result['data'])
-        console.log(result);
-        addToConsole(`${url} returns ${result['data']}`);
-        getUsers();
-      }
-
-      if (result.status.code == 400) {
-        console.log(result);
-        addToConsole(`${url} returns ${result['data']}`);
-      }
+      console.log(result);
+      addToConsole(`${url} returns ${result['data']}`);
+      getUsers();
 
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -123,14 +115,9 @@ function insertUser() {
       phone: phone
     },
     success: function(result) {
-
       console.log(result)
-      if (result.status.name == "ok") {
-        console.log(result)
-        addToConsole(`${url} returns ${result['data']}`);
-        getUsers();
-      }
-
+      addToConsole(`${url} returns ${result['data']}`);
+      getUsers();
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.warn(jqXHR.responseText);
@@ -155,7 +142,7 @@ function updateUser() {
     dataType: 'json',
     data: {
       id: id,
-      firstName: firstName,
+      // firstName: firstName,
       surname: surname,
       dob: dob,
       email: email,
@@ -165,18 +152,9 @@ function updateUser() {
       "APIKEY": keyAPI
     },
     success: function(result) {
-
-      if (result.status.name == "ok") {
-        console.log(result);
-        addToConsole(result['data']);
-        getUsers();
-      }
-
-      if (result.status.code == 400) {
-        console.log(result);
-        addToConsole(result['data']);
-      }
-
+      console.log(result);
+      addToConsole(result['data']);
+      getUsers();
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.warn(jqXHR.responseText);
@@ -206,13 +184,9 @@ function deleteUser(id) {
       "APIKEY": keyAPI
     },
     success: function(result) {
-
-      if (result.status.name == "ok") {
-        console.log(result);
-        addToConsole(`${url} returns ${result['data']}`);
-        getUsers();
-      }
-
+      console.log(result);
+      addToConsole(`${url} returns ${result['data']}`);
+      getUsers();
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.warn(jqXHR.responseText);
