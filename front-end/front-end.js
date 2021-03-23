@@ -64,7 +64,7 @@ $(document).on('click', '#get', function () {
 function getUser() {
   const keyAPI = $( "#api" ).val();
   const id = $('#id').val();
-  const url = `http://localhost/php-rest-api/back-end/index.php?sid=${id}`;
+  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
   $.ajax({
     url: url,
     type: 'GET',
@@ -142,7 +142,7 @@ function updateUser() {
     dataType: 'json',
     data: {
       id: id,
-      // firstName: firstName,
+      firstName: firstName,
       surname: surname,
       dob: dob,
       email: email,
