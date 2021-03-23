@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2021 at 03:53 PM
+-- Generation Time: Mar 23, 2021 at 03:51 PM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.2.22
 
@@ -25,6 +25,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `api_keys`
+--
+
+CREATE TABLE `api_keys` (
+  `id` int(4) NOT NULL,
+  `api_key` char(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `api_keys`
+--
+
+INSERT INTO `api_keys` (`id`, `api_key`) VALUES
+(1, 'wpf0okfhmjoyb3v0gw16');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -32,7 +50,7 @@ CREATE TABLE `users` (
   `id` int(3) NOT NULL,
   `first_name` char(50) DEFAULT NULL,
   `surname` char(50) DEFAULT NULL,
-  `dob` char(30) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
   `phone` char(15) DEFAULT NULL,
   `email` char(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -44,17 +62,22 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `first_name`, `surname`, `dob`, `phone`, `email`) VALUES
 (1, 'Bruce', 'Wayne', '1945-01-26', '07827 667 047', 'bwayne@wayne.com'),
 (2, 'Jonathan', 'Herring', '1984-02-29', '07827 667 047', 'jherring_eng@yahoo.co.uk'),
-(3, 'Clark', 'Kent', '2016-01-26', '07827 667 047', 'ckent@daily-planet.com'),
+(3, 'Clark', 'Kent', '1950-01-26', '07827 667 047', 'ckent@daily-planet.com'),
 (4, 'Gareth', 'Herring', '1982-01-02', '07777 777 777', 'example@example.com'),
-(5, 'Ann', 'Example', '2021-09-10', '07777 777 777', 'example@example.com'),
-(6, 'Diana', 'Prince', '1970-07-03', '07777 888 999', 'dprince@vanda.co.uk'),
+(5, 'Ann', 'Example', '2002-09-10', '07777 777 777', 'example@example.com'),
+(6, 'Diana', 'Prince', '1900-07-03', '07777 888 999', 'dprince@vanda.co.uk'),
 (7, 'Tony', 'Yoboah', '1970-10-08', '07777 888 999', 'tyeboah@premier.co.uk'),
 (8, 'Clint', 'Barton', '1980-05-30', '07890 123 456', 'cbarton@avengers.com'),
 (9, 'Steve', 'Rogers', '1920-08-02', '07777 666 555', 'srogers@avengers.com');
-
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `api_keys`
+--
+ALTER TABLE `api_keys`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -67,10 +90,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `api_keys`
+--
+ALTER TABLE `api_keys`
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
