@@ -1,3 +1,4 @@
 RewriteEngine On    # Turn on the rewriting engine
 
-RewriteRule ^index/([0-9a-zA-Z_-]*)$ index.php?id=$1 [NC,L]
+RewriteRule ^index/([0-9a-zA-Z_-]*)$ index.php?id=$1 [NC]
+RewriteRule ^index index.php [NC]

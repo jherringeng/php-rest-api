@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `users`
 --
+-- Following for online DB
+-- USE dbs1672596;
 
 -- --------------------------------------------------------
 
@@ -51,7 +53,7 @@ CREATE TABLE `users` (
   `first_name` char(50) DEFAULT NULL,
   `surname` char(50) DEFAULT NULL,
   `dob` date DEFAULT NULL,
-  `phone` char(15) DEFAULT NULL,
+  `phone` char(20) DEFAULT NULL,
   `email` char(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

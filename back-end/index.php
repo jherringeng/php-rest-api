@@ -1,11 +1,18 @@
 <?php
 
-  include("dbConn.php");
+  // Allows access to the API through CORS
+  // 
+  header('Access-Control-Allow-Origin: *');
+  header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+  header("Access-Control-Request-Headers: Apikey");
+  header("Access-Control-Allow-Headers: Apikey");
+  header('Content-Type: application/json; charset=UTF-8');
 
+  include("DBConn.php");
+
+  // To be turned off for production
   ini_set('display_errors', 'On');
   error_reporting(E_ALL);
-
-  header('Content-Type: application/json; charset=UTF-8');
 
   // Start db connection object (includes functions for CRUD)
   $dbConn = new DBConn();
@@ -14,10 +21,10 @@
   try {
     // Throws error if header not available
     $headers = apache_request_headers();
-    if(!array_key_exists('APIKEY', $headers)){
+    if(!array_key_exists('Apikey', $headers)){
       throw new \Exception("No API key in header.");
     }
-    $apiKey = $headers['APIKEY'];
+    $apiKey = $headers['Apikey'];
     $dbConn->checkAPIkey($apiKey);
   } catch (Exception $e) {
     $dbConn->outputError("401", "error", "Auth failed.", $e->getMessage());

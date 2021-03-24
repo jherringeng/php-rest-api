@@ -28,7 +28,7 @@ function addToConsole(message) {
 
 function getUsers() {
   const keyAPI = $( "#api" ).val();
-  const url = "http://localhost/php-rest-api/back-end/index.php";
+  const url = "https://jonathanherring.co.uk/back-end/index.php";
   $.ajax({
     url: url,
     type: 'GET',
@@ -64,7 +64,7 @@ $(document).on('click', '#get', function () {
 function getUser() {
   const keyAPI = $( "#api" ).val();
   const id = $('#id').val();
-  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
+  const url = `https://jonathanherring.co.uk/back-end/index.php?id=${id}`;
   $.ajax({
     url: url,
     type: 'GET',
@@ -98,7 +98,7 @@ function insertUser() {
   const keyAPI = $( "#api" ).val();
   const firstName = $('#firstName').val(), surname = $('#surname').val(), dob = $('#dob').val();
   const email = $('#email').val(), phone = $('#phone').val();
-  const url = "http://localhost/php-rest-api/back-end/index.php";
+  const url = "https://jonathanherring.co.uk/back-end/index.php";
 
   $.ajax({
     url: url,
@@ -131,7 +131,7 @@ $(document).on('click', '#update', function () {
 });
 
 function updateUser() {
-  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
+  const url = `https://jonathanherring.co.uk/back-end/index.php?id=${id}`;
   const keyAPI = $( "#api" ).val();
   const id = $('#id').val(), firstName = $('#firstName').val(), surname = $('#surname').val(), dob = $('#dob').val();
   const email = $('#email').val(), phone = $('#phone').val();
@@ -172,7 +172,7 @@ $(document).on('click', '#delete', function () {
 
 function deleteUser(id) {
   const keyAPI = $( "#api" ).val();
-  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
+  const url = `https://jonathanherring.co.uk/back-end/index.php?id=${id}`;
   $.ajax({
     url: url,
     type: 'DELETE',

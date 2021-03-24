@@ -1,10 +1,18 @@
 <?php
 class DBConn {
 
+  // Access for localhost (change to your settings if testing)
   private $cd_host = "127.0.0.1";
   private $cd_user = "root"; // user name
   private $cd_password = ""; // password
   private $cd_dbname = "users"; // database name
+
+  // Access for online DB
+  // private $cd_host = "db5002055394.hosting-data.io";
+  // private $cd_user = "dbu1229560"; // user name
+  // private $cd_password = "2001!UserAPI"; // password
+  // private $cd_dbname = "dbs1672596"; // database name
+
   private $executionStartTime;
 
   private $conn = null;
@@ -187,24 +195,20 @@ class DBConn {
       $this->outputError("400", "error", "Update failed", $e->getMessage());
     }
 
+    // First checks if user exists before update
+    $stmt = $this->conn->prepare("SELECT * FROM users WHERE id=?");
+    $stmt->execute([$id]);
+    $data = $stmt->fetch();
+
+    if (!$data) {
+
+      $this->outputError("400", "error", "input failed", "Update user failed: no user with id $id.");
+
+    }
+
     // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("UPDATE users SET first_name=?, surname=?, dob=?, email=?, phone=? WHERE id=?");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone,$id]);
-
-    if (!$result) {
-
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "query failed";
-      $output['data'] = "Update user failed: no user with id $id";
-
-      $this->conn = null;
-
-      echo json_encode($output);
-
-      exit;
-
-    }
 
     $output['status']['code'] = "201";
     $output['status']['name'] = "ok";
@@ -219,23 +223,21 @@ class DBConn {
 
   function deleteUser($id)
   {
+    // First checks if user exists before deletion
+    $stmt = $this->conn->prepare("SELECT * FROM users WHERE id=?");
+    $stmt->execute([$id]);
+    $data = $stmt->fetch();
+
+    if (!$data) {
+
+      $this->outputError("400", "error", "input failed", "Delete user failed: no user with id $id.");
+
+    }
+
     // Passes query to DB after being processed to prevent SQL injection
     $query = "DELETE FROM users WHERE id=?";
     $stmt = $this->conn->prepare($query);
     $result = $stmt->execute([$id]);
-
-    if (!$result) {
-
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "query failed";
-      $output['data'] = "Delete user failed: no user with id $id.";
-
-      $this->conn = null;
-      echo json_encode($output);
-      exit;
-
-    }
 
     $output['status']['code'] = "204";
     $output['status']['name'] = "ok";
@@ -289,14 +291,7 @@ class DBConn {
 
     } catch (Exception $e) {
 
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "query failed";
-      $output['data'] = $e->getMessage();
-
-      $this->conn = null;
-      echo json_encode($output);
-      exit;
+      $this->outputError("400", "error", "input failed", $e->getMessage());
 
     }
 
@@ -309,14 +304,7 @@ class DBConn {
 
     } else {
 
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "query failed";
-      $output['data'] = "Name not valid format.";
-
-      $this->conn = null;
-      echo json_encode($output);
-      exit;
+      $this->outputError("400", "error", "input failed", "Name not valid format.");
 
     }
 
@@ -332,14 +320,7 @@ class DBConn {
 
     } else {
 
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "query failed";
-      $output['data'] = "Email not valid format.";
-
-      $this->conn = null;
-      echo json_encode($output);
-      exit;
+      $this->outputError("400", "error", "input failed", "Email not valid format.");
 
     }
   }
@@ -350,7 +331,7 @@ class DBConn {
     // Regex allows a range of potential phone formats e.g. +44 7827 667 047, 07827-667-047
     if(preg_match("/^[0-9\-\(\)\/\+\s]*$/", $phone)) {
 
-      // Doesn't actually change $phone so is unnecessary
+      // Doesn't actually change $phone so is unnecessary (only return required)
       return $phone;
 
     } else {
