@@ -239,14 +239,7 @@ class DBConn {
     $stmt = $this->conn->prepare($query);
     $result = $stmt->execute([$id]);
 
-    $output['status']['code'] = "204";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-    $output['data'] = "User $id deleted.";
-
-    $this->conn = null;
-    echo json_encode($output);
+    $this->outputSuccess("204", "ok", "success", "User $id deleted.");
 
   }
 
@@ -389,6 +382,20 @@ class DBConn {
     $output['status']['code'] = $code;
     $output['status']['name'] = $name;
     $output['status']['description'] = $desc;
+    $output['data'] = $data;
+
+    echo json_encode($output);
+    $this->conn = null;
+    exit;
+
+  }
+
+  function outputSuccess($code, $name, $desc, $data)
+  {
+    $output['status']['code'] = $code;
+    $output['status']['name'] = $name;
+    $output['status']['description'] = $desc;
+    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
     $output['data'] = $data;
 
     echo json_encode($output);
