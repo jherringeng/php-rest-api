@@ -84,14 +84,7 @@ class DBConn {
 
     }
 
-    $output['status']['code'] = "200";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-    $output['data'] = $data;
-
-    $this->conn = null;
-    echo json_encode($output);
+    $this->outputSuccess("200", "ok", "success", $data);
 
   }
 
@@ -116,14 +109,7 @@ class DBConn {
 
     }
 
-    $output['status']['code'] = "200";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-    $output['data'] = $data;
-
-    $this->conn = null;
-    echo json_encode($output);
+    $this->outputSuccess("200", "ok", "success", $data);
 
   }
 
@@ -137,21 +123,13 @@ class DBConn {
       if(!array_key_exists('firstName', $put_vars) || !array_key_exists('surname', $put_vars) || !array_key_exists('surname', $put_vars) || !array_key_exists('surname', $put_vars) || !array_key_exists('surname', $put_vars)) {
         throw new \Exception("Required input not given.");
       }
+
       $firstName = $this->validateName($put_vars['firstName']); $surname = $this->validateName($put_vars['surname']);
       $dob = $this->isDateMySqlFormat($put_vars['dob']); $email = $this->validateEmail($put_vars['email']);
       $phone = $this->validatePhone($put_vars['phone']);
 
     } catch (Exception $e) {
-
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "Insert failed";
-      $output['data'] = "Add user failed";
-
-      $this->conn = null;
-      echo json_encode($output);
-      exit;
-
+      $this->outputError("400", "error", "Insert failed", $e->getMessage());
     }
 
     // Passes query to DB after being processed to prevent SQL injection
@@ -159,25 +137,10 @@ class DBConn {
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone]);
 
     if (!$result) {
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "Insert failed";
-      $output['data'] = "Add user failed";
-
-      $this->conn = null;
-      echo json_encode($output);
-      exit;
-
+      $this->outputError("400", "error", "Insert failed", "Add user failed.");
     }
 
-    $output['status']['code'] = "201";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-    $output['data'] = "Inserted user.";
-
-    $this->conn = null;
-    echo json_encode($output);
+    $this->outputSuccess("201", "ok", "success", "Inserted user.");
 
   }
 
@@ -192,7 +155,9 @@ class DBConn {
       $surname = $this->validateName($_POST['surname']); $dob = $this->isDateMySqlFormat($_POST['dob']);
       $email = $this->validateEmail($_POST['email']); $phone = $this->validatePhone($_POST['phone']);
     } catch (\Exception $e) {
+
       $this->outputError("400", "error", "Update failed", $e->getMessage());
+
     }
 
     // First checks if user exists before update
@@ -210,14 +175,7 @@ class DBConn {
     $stmt = $this->conn->prepare("UPDATE users SET first_name=?, surname=?, dob=?, email=?, phone=? WHERE id=?");
     $result = $stmt->execute([$firstName, $surname, $dob, $email, $phone,$id]);
 
-    $output['status']['code'] = "201";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-    $output['data'] = "Updated user $id.";
-
-    $this->conn = null;
-    echo json_encode($output);
+    $this->outputSuccess("201", "ok", "success", "Updated user $id.");
 
   }
 

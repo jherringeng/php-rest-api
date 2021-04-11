@@ -131,10 +131,12 @@ $(document).on('click', '#update', function () {
 });
 
 function updateUser() {
-  const url = `https://jonathanherring.co.uk/back-end/index.php?id=${id}`;
   const keyAPI = $( "#api" ).val();
   const id = $('#id').val(), firstName = $('#firstName').val(), surname = $('#surname').val(), dob = $('#dob').val();
   const email = $('#email').val(), phone = $('#phone').val();
+  const url = `https://jonathanherring.co.uk/back-end/index.php?id=${id}`;
+
+  console.log(email);
 
   $.ajax({
     url: url,

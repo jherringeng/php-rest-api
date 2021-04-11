@@ -131,10 +131,12 @@ $(document).on('click', '#update', function () {
 });
 
 function updateUser() {
-  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
-  const keyAPI = $( "#api" ).val();
   const id = $('#id').val(), firstName = $('#firstName').val(), surname = $('#surname').val(), dob = $('#dob').val();
   const email = $('#email').val(), phone = $('#phone').val();
+  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
+  const keyAPI = $( "#api" ).val();
+
+  console.log(email);
 
   $.ajax({
     url: url,
