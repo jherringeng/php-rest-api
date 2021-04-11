@@ -33,8 +33,24 @@ class DBConn {
 
   }
 
+  public function checkAPIKey()
+  {
+    // Tries to get APIkey
+    try {
+      // Throws error if header not available
+      $headers = apache_request_headers();
+      if(!array_key_exists('Apikey', $headers)){
+        throw new \Exception("No API key in header.");
+      }
+      $apiKey = $headers['Apikey'];
+      $this->checkAPIkeyInDB($apiKey);
+    } catch (Exception $e) {
+      $this->outputError("401", "error", "Auth failed.", $e->getMessage());
+    }
+  }
+
   // Get a user from DB
-  function checkAPIkey($APIkey)
+  private function checkAPIkeyInDB($APIkey)
   {
     $stmt = $this->conn->prepare("SELECT * FROM api_keys WHERE api_key=?");
     $stmt->execute([$APIkey]);
@@ -50,7 +66,56 @@ class DBConn {
 
   }
 
-  function getUsers()
+  public function makeQuery()
+  {
+    // Server uses HTTP verbs to determine actions (GET, POST, PUT, DELETE)
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+      $url = parse_url($_SERVER['REQUEST_URI']);
+      if(array_key_exists('id', $_GET)) {
+        $id = $_GET['id'];
+        $this->getUser($id);
+      } else if (!array_key_exists('query', $url)) {
+        $this->getUsers();
+      }
+      else {
+        $this->outputURLError();
+      }
+    }
+
+    // HTTP verb for inserting users
+    if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+      $this->insertUser();
+    }
+
+    // HTTP verb for updating users
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      if(array_key_exists('id', $_POST)) {
+        $id = $_POST['id'];
+        $this->updateUser($id);
+      } else {
+        $this->outputURLError();
+      }
+
+    }
+
+    // HTTP verb for deleting users
+    if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+      try {
+        $url = parse_url($_SERVER['REQUEST_URI']);
+        if(!array_key_exists('query', $url)){
+          throw new \Exception("No query string for id.");
+        }
+        parse_str($url['query'], $DELETE);
+        $id = $DELETE['id'];
+        $this->deleteUser($id);
+      } catch (Exception $e) {
+        $this->outputURLError();
+      }
+
+    }
+  }
+
+  private function getUsers()
   {
     $query = "SELECT * FROM users";
     $data = $this->conn->query($query)->fetchAll();
@@ -59,12 +124,12 @@ class DBConn {
       $this->outputError("400", "error", "Query failed", "Could not return users.");
     }
 
-    $this->outputSuccess("200", "ok", "success", $data);
+    $this->outputSuccess("200", "ok", "Success", $data);
 
   }
 
   // Get a user from DB
-  function getUser($id)
+  private function getUser($id)
   {
     // Passes query to DB after being processed to prevent SQL injection
     $stmt = $this->conn->prepare("SELECT * FROM users WHERE id=?");
@@ -80,7 +145,7 @@ class DBConn {
   }
 
   // Insert user to DB
-  function insertUser()
+  private function insertUser()
   {
     // Try and catch any incorrect array references
     try {
@@ -147,7 +212,7 @@ class DBConn {
 
   }
 
-  function deleteUser($id)
+  private function deleteUser($id)
   {
     // First checks if user exists before deletion
     $stmt = $this->conn->prepare("SELECT * FROM users WHERE id=?");
@@ -170,10 +235,13 @@ class DBConn {
   }
 
   // Processes date for storage as mySQL date
-  function isDateMySqlFormat($date)
+  private function isDateMySqlFormat($date)
   {
     // Uses try catch statements to determine various conditions
     try {
+
+      // Gets rid of whitespaces at beginning and end of string
+      $date = trim($date);
 
       // Throw exception if nothing is passed (prevents same day date)
       if (!$date) {
@@ -216,12 +284,12 @@ class DBConn {
 
   }
 
-  function validateName($name) {
+  private function validateName($name) {
 
     // Gets rid of whitspaces
     $name = trim($name);
 
-    // Checks if name is empty
+    // Checks if name is empty (could be further improved for first or second names)
     if(empty($name)) {
       $this->outputError("400", "error", "input failed", "Please add a name.");
     }
@@ -239,8 +307,15 @@ class DBConn {
   }
 
   // Function for validating email
-  function validateEmail($email)
+  private function validateEmail($email)
   {
+    // Gets rid of whitespaces
+    $email = trim($email);
+
+    if(empty($email)) {
+      $this->outputError("400", "error", "input failed", "Please add an email address.");
+    }
+
     // Ensures email is of correct format
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
@@ -254,12 +329,18 @@ class DBConn {
   }
 
   // Regex for validating phone numbers
-  function validatePhone($phone)
+  private function validatePhone($phone)
   {
+    // Gets rid of whitespaces
+    $phone = trim($phone);
+
+    if(empty($phone)) {
+      $this->outputError("400", "error", "input failed", "Please add a phone number.");
+    }
+
     // Regex allows a range of potential phone formats e.g. +44 7827 667 047, 07827-667-047
     if(preg_match("/^[0-9\-\(\)\/\+\s]*$/", $phone)) {
 
-      // Doesn't actually change $phone so is unnecessary (only return required)
       return $phone;
 
     } else {
@@ -270,7 +351,7 @@ class DBConn {
   }
 
   // Generates an API key (not used in practice - could generate then return new user API keys)
-  function generateAPIkey()
+  private function generateAPIkey()
   {
     // Generate random string for APIkey (20 letters long)
     $length = 20;
@@ -287,7 +368,7 @@ class DBConn {
   }
 
   // Returns error codes, closes dbConn and exits script for URL error
-  function outputURLError()
+  private function outputURLError()
   {
 
     $this->outputError("400", "error", "Query failed", "URL string has incorrect format.");
@@ -297,7 +378,7 @@ class DBConn {
   // Returns error codes, closes dbConn and exits script for URL error
   // With more refactoring all errors would be output using this code (giving much shorter and adaptable code)
   // Could also replace the successful output with similar function
-  function outputError($code, $name, $desc, $data)
+  private function outputError($code, $name, $desc, $data)
   {
     $output['status']['code'] = $code;
     $output['status']['name'] = $name;
@@ -310,7 +391,7 @@ class DBConn {
 
   }
 
-  function outputSuccess($code, $name, $desc, $data)
+  private function outputSuccess($code, $name, $desc, $data)
   {
     $output['status']['code'] = $code;
     $output['status']['name'] = $name;
