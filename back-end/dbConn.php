@@ -26,16 +26,7 @@ class DBConn {
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     catch(PDOException $e) {
-      $output['status']['code'] = "300";
-      $output['status']['name'] = "failure";
-      $output['status']['description'] = "database unavailable";
-      $output['status']['returnedIn'] = (microtime(true) - $this->executionStartTime) / 1000 . " ms";
-      $output['data'] = $e->getMessage();
-
-      echo json_encode($output);
-
-      exit;
-
+      $this->outputError("300", "Failure", "Database unavailable.", $e->getMessage());
     }
 
     $this->conn = $conn;
@@ -51,14 +42,7 @@ class DBConn {
 
     if (!$data) {
 
-      $output['status']['code'] = "401";
-      $output['status']['name'] = "ok";
-      $output['status']['description'] = "Auth failed.";
-      $output['data'] = "Not authorised.";
-
-      echo json_encode($output);
-      $this->conn = null;
-      exit;
+      $this->outputError("400", "error", "Auth failed.", "Authorisation failed. Please check your API key.");
 
     }
 
@@ -72,16 +56,7 @@ class DBConn {
     $data = $this->conn->query($query)->fetchAll();
 
     if (!$data) {
-
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "query failed";
-      $output['data'] = [];
-
-      $this->conn = null;
-      echo json_encode($output);
-      exit;
-
+      $this->outputError("400", "error", "Query failed", "Could not return users.");
     }
 
     $this->outputSuccess("200", "ok", "success", $data);
@@ -97,16 +72,7 @@ class DBConn {
     $data = $stmt->fetch();
 
     if (!$data) {
-
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "query failed";
-      $output['data'] = "Get user failed: No user with id $id";
-
-      $this->conn = null;
-      echo json_encode($output);
-      exit;
-
+      $this->outputError("400", "Error", "Query failed", "Get user failed: No user with id $id.");
     }
 
     $this->outputSuccess("200", "ok", "success", $data);
@@ -151,9 +117,11 @@ class DBConn {
       if(!array_key_exists('firstName', $_POST) || !array_key_exists('surname', $_POST) || !array_key_exists('surname', $_POST) || !array_key_exists('surname', $_POST) || !array_key_exists('surname', $_POST)){
         throw new \Exception("Required input not given.");
       }
+
       $id = $_POST['id']; $firstName = $this->validateName($_POST['firstName']);
       $surname = $this->validateName($_POST['surname']); $dob = $this->isDateMySqlFormat($_POST['dob']);
       $email = $this->validateEmail($_POST['email']); $phone = $this->validatePhone($_POST['phone']);
+
     } catch (\Exception $e) {
 
       $this->outputError("400", "error", "Update failed", $e->getMessage());
@@ -249,6 +217,15 @@ class DBConn {
   }
 
   function validateName($name) {
+
+    // Gets rid of whitspaces
+    $name = trim($name);
+
+    // Checks if name is empty
+    if(empty($name)) {
+      $this->outputError("400", "error", "input failed", "Please add a name.");
+    }
+
     if(preg_match("/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/", $name)) {
 
       return $name;
@@ -287,14 +264,7 @@ class DBConn {
 
     } else {
 
-      $output['status']['code'] = "400";
-      $output['status']['name'] = "executed";
-      $output['status']['description'] = "query failed";
-      $output['data'] = "Phone number not valid format.";
-
-      $this->conn = null;
-      echo json_encode($output);
-      exit;
+      $this->outputError("400", "error", "Query failed", "Phone number not valid format.");
 
     }
   }
@@ -319,16 +289,8 @@ class DBConn {
   // Returns error codes, closes dbConn and exits script for URL error
   function outputURLError()
   {
-    $output['status']['code'] = "400";
-    $output['status']['name'] = "executed";
-    $output['status']['description'] = "query failed";
-    $output['data'] = "URL string has incorrect format.";
 
-    echo json_encode($output);
-
-    $this->conn = null;
-
-    exit;
+    $this->outputError("400", "error", "Query failed", "URL string has incorrect format.");
 
   }
 

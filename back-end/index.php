@@ -1,7 +1,7 @@
 <?php
 
   // Allows access to the API through CORS
-  // 
+  // Could be tightened up for certain IP
   header('Access-Control-Allow-Origin: *');
   header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
   header("Access-Control-Request-Headers: Apikey");
