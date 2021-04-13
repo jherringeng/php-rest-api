@@ -2,8 +2,171 @@ var users;
 // const keyAPI = 'wpf0okfhmjoyb3v0gw16';
 
 $( document ).ready(function() {
+    updateUserForm();
     getUsers();
 });
+
+
+// Event listener for update user form
+$(document).on('click', '#getUser', function () {
+  getUserForm();
+});
+
+// Modify form for updating user
+function getUserForm() {
+  $( "#userForm" ).html (
+    `<form id="get" onsubmit="return false">
+      <div class="form-row">
+        <div class="form-group col-sm-4">
+          <label for="inputCity">ID#</label>
+          <input type="text" class="form-control" id="id">
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <label for="api">API Key</label>
+          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16">
+        </div>
+        <div class="form-group col-sm-4">
+        </div>
+        <div class="form-group col-sm-4">
+          <input type="submit" class="btn btn-primary w-100" value="Submit">
+        </div>
+      </div>
+    </form>`
+  )
+}
+
+// Event listener for insert user form
+$(document).on('click', '#insertUser', function () {
+  insertUserForm();
+});
+
+// Modify form for inserting user
+function insertUserForm() {
+  $( "#userForm" ).html (
+    `<form>
+      <div class="form-row">
+        <div class="form-group col-sm-4">
+          <label for="firstName">First Name</label>
+          <input type="text" class="form-control" name="firstName" id="firstName">
+        </div>
+        <div class="form-group col-sm-4">
+          <label for="surname">Surname</label>
+          <input type="text" class="form-control" name="surname" id="surname">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-sm-4">
+          <label for="dob">Date of Birth</label>
+          <input type="text" class="form-control" name="dob" id="dob">
+        </div>
+        <div class="form-group col-sm-4">
+          <label for="email">Email</label>
+          <input type="text" class="form-control" name="email" id="email">
+        </div>
+        <div class="form-group col-sm-4">
+          <label for="phone">Phone</label>
+          <input type="text" class="form-control" name="phone" id="phone">
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <label for="api">API Key</label>
+          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16">
+        </div>
+        <div class="form-group col-sm-4">
+        </div>
+        <div class="form-group col-sm-4">
+          <input type="submit" class="btn btn-success w-100" value="Submit">
+        </div>
+      </div>
+    </form>`
+  )
+}
+
+// Event listener for update user form
+$(document).on('click', '#updateUser', function () {
+  updateUserForm();
+});
+
+// Modify form for updating user
+function updateUserForm() {
+  $( "#userForm" ).html (
+    `<form>
+      <div class="form-row">
+        <div class="form-group col-sm-4">
+          <label for="inputCity">ID#</label>
+          <input type="text" class="form-control" id="id">
+        </div>
+        <div class="form-group col-sm-4">
+          <label for="firstName">First Name</label>
+          <input type="text" class="form-control" name="firstName" id="firstName">
+        </div>
+        <div class="form-group col-sm-4">
+          <label for="surname">Surname</label>
+          <input type="text" class="form-control" name="surname" id="surname">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-sm-4">
+          <label for="dob">Date of Birth</label>
+          <input type="text" class="form-control" name="dob" id="dob">
+        </div>
+        <div class="form-group col-sm-4">
+          <label for="email">Email</label>
+          <input type="text" class="form-control" name="email" id="email">
+        </div>
+        <div class="form-group col-sm-4">
+          <label for="phone">Phone</label>
+          <input type="text" class="form-control" name="phone" id="phone">
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <label for="api">API Key</label>
+          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16">
+        </div>
+        <div class="form-group col-sm-4">
+        </div>
+        <div class="form-group col-sm-4">
+          <input type="submit" class="btn btn-warning w-100" value="Submit">
+        </div>
+      </div>
+    </form>`
+  )
+}
+
+
+// Event listener for update user form
+$(document).on('click', '#deleteUser', function () {
+  deleteUserForm();
+});
+
+// Modify form for updating user
+function deleteUserForm() {
+  $( "#userForm" ).html (
+    `<form>
+      <div class="form-row">
+        <div class="form-group col-sm-4">
+          <label for="inputCity">ID#</label>
+          <input type="text" class="form-control" id="id">
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <label for="api">API Key</label>
+          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16">
+        </div>
+        <div class="form-group col-sm-4">
+        </div>
+        <div class="form-group col-sm-4">
+          <input type="submit" class="btn btn-danger w-100" value="Submit">
+        </div>
+      </div>
+    </form>`
+  )
+}
 
 // Display users in the table
 function displayInfo() {
@@ -57,7 +220,7 @@ function getUsers() {
 }
 
 // Event listener for get user
-$(document).on('click', '#get', function () {
+$(document).on('submit', '#get', function () {
   getUser();
 });
 
