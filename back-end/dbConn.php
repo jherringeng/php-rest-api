@@ -175,14 +175,17 @@ class DBConn {
 
   }
 
+  // Update user
   function updateUser()
   {
     try {
 
+      // Check whether required data has been passed. Throw exception and exit if not
       if(!array_key_exists('firstName', $_POST) || !array_key_exists('surname', $_POST) || !array_key_exists('surname', $_POST) || !array_key_exists('surname', $_POST) || !array_key_exists('surname', $_POST)){
         throw new \Exception("Required input not given.");
       }
 
+      // Get the data after validation. Exits with message if validation fails
       $id = $_POST['id']; $firstName = $this->validateName($_POST['firstName']);
       $surname = $this->validateName($_POST['surname']); $dob = $this->isDateMySqlFormat($_POST['dob']);
       $email = $this->validateEmail($_POST['email']); $phone = $this->validatePhone($_POST['phone']);
@@ -334,6 +337,7 @@ class DBConn {
     // Gets rid of whitespaces
     $phone = trim($phone);
 
+    // Checks whether date has been given
     if(empty($phone)) {
       $this->outputError("400", "error", "input failed", "Please add a phone number.");
     }
@@ -368,7 +372,7 @@ class DBConn {
   }
 
   // Returns error codes, closes dbConn and exits script for URL error
-  private function outputURLError()
+  function outputURLError()
   {
 
     $this->outputError("400", "error", "Query failed", "URL string has incorrect format.");

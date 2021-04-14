@@ -29,8 +29,8 @@ function getUserForm() {
         </div>
         <div class="form-group col-sm-4">
         </div>
-        <div class="form-group col-sm-4">
-          <input type="submit" class="btn btn-primary w-100" value="Submit">
+        <div class="form-group col-sm-4 submit-button">
+          <input type="submit" class="btn btn-primary w-100" value="Get User">
         </div>
       </div>
     </form>`
@@ -77,7 +77,7 @@ function insertUserForm() {
         </div>
         <div class="form-group col-sm-4">
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-sm-4 submit-button">
           <input type="submit" class="btn btn-success w-100" value="Add User">
         </div>
       </div>
@@ -129,8 +129,8 @@ function updateUserForm() {
         </div>
         <div class="form-group col-sm-4">
         </div>
-        <div class="form-group col-sm-4">
-          <input type="submit" class="btn btn-warning w-100" value="Submit">
+        <div class="form-group col-sm-4 submit-button">
+          <input type="submit" class="btn btn-warning w-100" value="Update User">
         </div>
       </div>
     </form>`
@@ -160,8 +160,8 @@ function deleteUserForm() {
         </div>
         <div class="form-group col-sm-4">
         </div>
-        <div class="form-group col-sm-4">
-          <input type="submit" class="btn btn-danger w-100" value="Submit">
+        <div class="form-group col-sm-4 submit-button">
+          <input type="submit" class="btn btn-danger w-100" value="Delete User">
         </div>
       </div>
     </form>`
@@ -186,7 +186,7 @@ function displayInfo() {
 
 // Add to console log on page
 function addToConsole(message) {
-  $( "#console" ).append( `<p>${message}</p>`);
+  $( "#console" ).html( `<p>${message}</p>`);
 }
 
 function getUsers() {
