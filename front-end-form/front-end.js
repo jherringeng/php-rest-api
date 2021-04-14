@@ -2,7 +2,7 @@ var users;
 // const keyAPI = 'wpf0okfhmjoyb3v0gw16';
 
 $( document ).ready(function() {
-    updateUserForm();
+    getUserForm();
     getUsers();
 });
 
@@ -19,13 +19,13 @@ function getUserForm() {
       <div class="form-row">
         <div class="form-group col-sm-4">
           <label for="inputCity">ID#</label>
-          <input type="text" class="form-control" id="id">
+          <input type="number" class="form-control" id="id" required>
         </div>
       </div>
       <div class="row">
         <div class="form-group col-sm-4">
           <label for="api">API Key</label>
-          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16">
+          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16" required>
         </div>
         <div class="form-group col-sm-4">
         </div>
@@ -45,40 +45,40 @@ $(document).on('click', '#insertUser', function () {
 // Modify form for inserting user
 function insertUserForm() {
   $( "#userForm" ).html (
-    `<form>
+    `<form id="insert" onsubmit="return false">
       <div class="form-row">
         <div class="form-group col-sm-4">
           <label for="firstName">First Name</label>
-          <input type="text" class="form-control" name="firstName" id="firstName">
+          <input type="text" class="form-control" name="firstName" id="firstName" required>
         </div>
         <div class="form-group col-sm-4">
           <label for="surname">Surname</label>
-          <input type="text" class="form-control" name="surname" id="surname">
+          <input type="text" class="form-control" name="surname" id="surname" required>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-sm-4">
           <label for="dob">Date of Birth</label>
-          <input type="text" class="form-control" name="dob" id="dob">
+          <input type="text" class="form-control" name="dob" id="dob" required>
         </div>
         <div class="form-group col-sm-4">
           <label for="email">Email</label>
-          <input type="text" class="form-control" name="email" id="email">
+          <input type="text" class="form-control" name="email" id="email" required>
         </div>
         <div class="form-group col-sm-4">
           <label for="phone">Phone</label>
-          <input type="text" class="form-control" name="phone" id="phone">
+          <input type="text" class="form-control" name="phone" id="phone" required>
         </div>
       </div>
       <div class="row">
         <div class="form-group col-sm-4">
           <label for="api">API Key</label>
-          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16">
+          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16" required>
         </div>
         <div class="form-group col-sm-4">
         </div>
         <div class="form-group col-sm-4">
-          <input type="submit" class="btn btn-success w-100" value="Submit">
+          <input type="submit" class="btn btn-success w-100" value="Add User">
         </div>
       </div>
     </form>`
@@ -93,33 +93,33 @@ $(document).on('click', '#updateUser', function () {
 // Modify form for updating user
 function updateUserForm() {
   $( "#userForm" ).html (
-    `<form>
+    `<form id="update" onsubmit="return false">
       <div class="form-row">
         <div class="form-group col-sm-4">
           <label for="inputCity">ID#</label>
-          <input type="text" class="form-control" id="id">
+          <input type="text" class="form-control" id="id" required>
         </div>
         <div class="form-group col-sm-4">
           <label for="firstName">First Name</label>
-          <input type="text" class="form-control" name="firstName" id="firstName">
+          <input type="text" class="form-control" name="firstName" id="firstName" required>
         </div>
         <div class="form-group col-sm-4">
           <label for="surname">Surname</label>
-          <input type="text" class="form-control" name="surname" id="surname">
+          <input type="text" class="form-control" name="surname" id="surname" required>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-sm-4">
           <label for="dob">Date of Birth</label>
-          <input type="text" class="form-control" name="dob" id="dob">
+          <input type="text" class="form-control" name="dob" id="dob" required>
         </div>
         <div class="form-group col-sm-4">
           <label for="email">Email</label>
-          <input type="text" class="form-control" name="email" id="email">
+          <input type="email" class="form-control" name="email" id="email" required>
         </div>
         <div class="form-group col-sm-4">
           <label for="phone">Phone</label>
-          <input type="text" class="form-control" name="phone" id="phone">
+          <input type="text" class="form-control" name="phone" id="phone" required>
         </div>
       </div>
       <div class="row">
@@ -146,17 +146,17 @@ $(document).on('click', '#deleteUser', function () {
 // Modify form for updating user
 function deleteUserForm() {
   $( "#userForm" ).html (
-    `<form>
+    `<form id="delete" onsubmit="return false">
       <div class="form-row">
         <div class="form-group col-sm-4">
           <label for="inputCity">ID#</label>
-          <input type="text" class="form-control" id="id">
+          <input type="number" class="form-control" id="id" required>
         </div>
       </div>
       <div class="row">
         <div class="form-group col-sm-4">
           <label for="api">API Key</label>
-          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16">
+          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16" required>
         </div>
         <div class="form-group col-sm-4">
         </div>
@@ -252,7 +252,7 @@ function getUser() {
 }
 
 // Event listener for insert user
-$(document).on('click', '#insert', function () {
+$(document).on('submit', '#insert', function () {
   insertUser();
 });
 
@@ -289,7 +289,7 @@ function insertUser() {
 }
 
 // Event listener for update button
-$(document).on('click', '#update', function () {
+$(document).on('submit', '#update', function () {
   updateUser();
 });
 
