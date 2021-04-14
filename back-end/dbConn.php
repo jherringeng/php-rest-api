@@ -49,9 +49,11 @@ class DBConn {
     }
   }
 
-  // Get a user from DB
+  // See whether API key is in DB
   private function checkAPIkeyInDB($APIkey)
   {
+
+    // Query is prepared to prevent DB injection
     $stmt = $this->conn->prepare("SELECT * FROM api_keys WHERE api_key=?");
     $stmt->execute([$APIkey]);
     $data = $stmt->fetch();

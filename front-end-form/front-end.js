@@ -17,19 +17,19 @@ function getUserForm() {
   $( "#userForm" ).html (
     `<form id="get" onsubmit="return false">
       <div class="form-row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="inputCity">ID#</label>
           <input type="number" class="form-control" id="id" required>
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="api">API Key</label>
           <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
         </div>
-        <div class="form-group col-sm-4 submit-button">
+        <div class="form-group col-md-4 submit-button">
           <input type="submit" class="btn btn-primary w-100" value="Get User">
         </div>
       </div>
@@ -47,37 +47,37 @@ function insertUserForm() {
   $( "#userForm" ).html (
     `<form id="insert" onsubmit="return false">
       <div class="form-row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="firstName">First Name</label>
-          <input type="text" class="form-control" name="firstName" id="firstName" required>
+          <input type="text" class="form-control" name="firstName" id="firstName" pattern="[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]" size="50" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="surname">Surname</label>
-          <input type="text" class="form-control" name="surname" id="surname" required>
+          <input type="text" class="form-control" name="surname" id="surname" pattern="[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]" size="50" required>
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="dob">Date of Birth</label>
           <input type="text" class="form-control" name="dob" id="dob" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="email">Email</label>
           <input type="text" class="form-control" name="email" id="email" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="phone">Phone</label>
-          <input type="text" class="form-control" name="phone" id="phone" required>
+          <input type="text" class="form-control" name="phone" id="phone" pattern="[0-9\-\(\)\/\+\s]" required>
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="api">API Key</label>
-          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16" required>
+          <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16" size="20" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
         </div>
-        <div class="form-group col-sm-4 submit-button">
+        <div class="form-group col-md-4 submit-button">
           <input type="submit" class="btn btn-success w-100" value="Add User">
         </div>
       </div>
@@ -95,41 +95,41 @@ function updateUserForm() {
   $( "#userForm" ).html (
     `<form id="update" onsubmit="return false">
       <div class="form-row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="inputCity">ID#</label>
-          <input type="text" class="form-control" id="id" required>
+          <input type="number" class="form-control" id="id" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="firstName">First Name</label>
-          <input type="text" class="form-control" name="firstName" id="firstName" required>
+          <input type="text" class="form-control" name="firstName" id="firstName" pattern="[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="surname">Surname</label>
-          <input type="text" class="form-control" name="surname" id="surname" required>
+          <input type="text" class="form-control" name="surname" id="surname" "[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]" required>
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="dob">Date of Birth</label>
           <input type="text" class="form-control" name="dob" id="dob" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="email">Email</label>
           <input type="email" class="form-control" name="email" id="email" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="phone">Phone</label>
-          <input type="text" class="form-control" name="phone" id="phone" required>
+          <input type="text" class="form-control" name="phone" id="phone" pattern="[0-9\-\(\)\/\+\s]" required>
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="api">API Key</label>
           <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16">
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
         </div>
-        <div class="form-group col-sm-4 submit-button">
+        <div class="form-group col-md-4 submit-button">
           <input type="submit" class="btn btn-warning w-100" value="Update User">
         </div>
       </div>
@@ -148,19 +148,19 @@ function deleteUserForm() {
   $( "#userForm" ).html (
     `<form id="delete" onsubmit="return false">
       <div class="form-row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="inputCity">ID#</label>
           <input type="number" class="form-control" id="id" required>
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
           <label for="api">API Key</label>
           <input type="text" class="form-control" name="api" id="api" value="wpf0okfhmjoyb3v0gw16" required>
         </div>
-        <div class="form-group col-sm-4">
+        <div class="form-group col-md-4">
         </div>
-        <div class="form-group col-sm-4 submit-button">
+        <div class="form-group col-md-4 submit-button">
           <input type="submit" class="btn btn-danger w-100" value="Delete User">
         </div>
       </div>
