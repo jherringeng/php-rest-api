@@ -1,0 +1,23 @@
+@media only screen and (max-width: 600px) {
+  html {
+    font-size: 0.75em;
+  }
+}
+
+p {
+  margin: 0.5rem;
+}
+
+table {
+  font-size: 0.75em;
+}
+
+.submit-button {
+  display: flex;
+  align-items: flex-end;
+}
+
+.console-container {
+  display: flex;
+  align-items: center;
+}

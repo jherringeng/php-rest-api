@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>User Input Form</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="libs/js/jquery-3.5.1.min.js"></script>
+
+    <script src="libs/js/popper.js"></script>
+    <link rel="stylesheet" href="libs/bootstrap-4.0.0-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="libs/css/style.css">
+
+  </head>
+  <body>
+    <section class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <button id="getUser" class="btn btn-primary w-100">Get User</button>
+        </div>
+        <div class="col-md-3">
+          <button id="insertUser" class="btn btn-success w-100">Add User</button>
+        </div>
+        <div class="col-md-3">
+          <button id="updateUser" class="btn btn-warning w-100">Update User</button>
+        </div>
+        <div class="col-md-3">
+          <button id="deleteUser" class="btn btn-danger w-100">Delete User</button>
+        </div>
+      </div>
+
+      <div id="userForm">
+
+      </div>
+
+      <section id="console-container" class="border border-light rounded">
+        <div id="console">
+
+        </div>
+      </section>
+
+      <section class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">D.O.B.</th>
+              <th scope="col">Email</th>
+              <th scope="col">Phone</th>
+            </tr>
+          </thead>
+          <tbody id="tableData">
+
+          </tbody>
+        </table>
+      </section>
+
+    </section>
+
+    <script src="libs/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="front-end.js"></script>
+
+    </script>
+  </body>
+</html>

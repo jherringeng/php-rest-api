@@ -67,7 +67,7 @@ function insertUserForm() {
         </div>
         <div class="form-group col-md-4">
           <label for="phone">Phone</label>
-          <input type="text" class="form-control" name="phone" id="phone" pattern="[0-9 \-\(\)\/\+\s]+" required>
+          <input type="text" class="form-control" name="phone" id="phone" pattern="[0-9 \-\(\)\/\+\s]*" required>
         </div>
       </div>
       <div class="row">
@@ -119,7 +119,7 @@ function updateUserForm() {
         </div>
         <div class="form-group col-md-4">
           <label for="phone">Phone</label>
-          <input type="text" class="form-control" name="phone" id="phone" pattern="[0-9 \-\(\)\/\+\s]" required>
+          <input type="text" class="form-control" name="phone" id="phone" pattern="[0-9 \-\(\)\/\+\s]*" required>
         </div>
       </div>
       <div class="row">
@@ -191,7 +191,7 @@ function addToConsole(message) {
 
 function getUsers() {
   const keyAPI = $( "#api" ).val();
-  const url = "http://localhost/php-rest-api/back-end/index.php";
+  const url = "https://jonathanherring.co.uk/back-end/index.php";
   $.ajax({
     url: url,
     type: 'GET',
@@ -227,7 +227,7 @@ $(document).on('submit', '#get', function () {
 function getUser() {
   const keyAPI = $( "#api" ).val();
   const id = $('#id').val();
-  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
+  const url = `https://jonathanherring.co.uk/back-end/index.php?id=${id}`;
   $.ajax({
     url: url,
     type: 'GET',
@@ -261,7 +261,7 @@ function insertUser() {
   const keyAPI = $( "#api" ).val();
   const firstName = $('#firstName').val(), surname = $('#surname').val(), dob = $('#dob').val();
   const email = $('#email').val(), phone = $('#phone').val();
-  const url = "http://localhost/php-rest-api/back-end/index.php";
+  const url = "https://jonathanherring.co.uk/back-end/index.php";
 
   $.ajax({
     url: url,
@@ -296,7 +296,7 @@ $(document).on('submit', '#update', function () {
 function updateUser() {
   const id = $('#id').val(), firstName = $('#firstName').val(), surname = $('#surname').val(), dob = $('#dob').val();
   const email = $('#email').val(), phone = $('#phone').val();
-  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
+  const url = `https://jonathanherring.co.uk/back-end/index.php?id=${id}`;
   const keyAPI = $( "#api" ).val();
 
   console.log(email);
@@ -337,7 +337,7 @@ $(document).on('click', '#delete', function () {
 
 function deleteUser(id) {
   const keyAPI = $( "#api" ).val();
-  const url = `http://localhost/php-rest-api/back-end/index.php?id=${id}`;
+  const url = `https://jonathanherring.co.uk/back-end/index.php?id=${id}`;
   $.ajax({
     url: url,
     type: 'DELETE',
